@@ -159,7 +159,7 @@ SELECT
 			'issue_cus_process_method_code', '',
 			'issue_cus_process_method_name', '',
 			'issue_cus_process_type_code', '',
-			'issue_cus_process_type_name', '',
+			'issue_cus_process_type_name', history_temp.CLASSIFICATION,
 			'issue_cus_process_dept_code', history_temp.DEPT_CODE,
 			'issue_cus_process_dept_name', history_temp.DEPT_NAME,
 			'issue_cus_process_creator_code',history_temp.CREATED_USER_CODE,
