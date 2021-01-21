@@ -1107,8 +1107,8 @@ IF
 
 
 UPDATE crm_issue 
-SET issue_date_over = IF (issue_status_code = 7, DATEDIFF(issue_finish_date, issue_receive_date) ,DATEDIFF(CURRENT_DATE, issue_receive_date))
-WHERE issue_migration_no = 1 AND issue_receive_date IS NOT NULL;
+SET issue_date_over = IF (issue_status_code = 7, IF (IFNULL (issue_receive_date, '') = '', 0, DATEDIFF(issue_finish_date, issue_receive_date)), IF (IFNULL (issue_receive_date, '') = '', 0, DATEDIFF(CURRENT_DATE, issue_receive_date)))
+WHERE issue_migration_no = 1;
 
 
 INSERT INTO crm_temp_issue_relation
