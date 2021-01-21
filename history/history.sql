@@ -100,6 +100,7 @@ temp_history.is_updated_cus_process = 1;
 -- insert data issue history
 INSERT INTO crm_issue_history ( 
 history_issue_code, 
+history_relation_id,
 history_type, 
 history_display_flag, 
 history_params, 
@@ -114,6 +115,7 @@ history_updated_date,
 history_process_date ) 
 SELECT
 	history_temp.CASE_ID,
+	history_temp.cus_process_id AS history_relation_id,
 	1 AS history_type,
 	1 AS history_display_flag,
 	IF (history_temp.CLASSIFICATION = '新規案件', 
