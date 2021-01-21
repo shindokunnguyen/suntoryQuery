@@ -89,8 +89,6 @@ JSON_OBJECT(
 	'issue_send_request_datetime',
 	DATE_FORMAT( REQUEST_DATETIME, '%Y-%m-%d %H:%i' ),
 	'issue_send_request_person_name',
-				   
-								
 	'',
 	'issue_send_request_dept_name',
 	REQUEST_DEPT_NAME,

@@ -25,6 +25,13 @@ CREATE TABLE `crm_temp_request_history_2`  (
   INDEX `idx_CASE_ID`(`CASE_ID`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
+ALTER TABLE `crm_temp_request_history_2` 
+ADD COLUMN `CREATED_USER_CODE` varchar(128) NULL AFTER `PARAMS`,
+ADD COLUMN `CREATED_USER_NAME` varchar(255) NULL AFTER `CREATED_USER_CODE`;
+
+ALTER TABLE `crm_temp_request_history_2` 
+CHANGE COLUMN `REQUEST_USER_CODE` `REQUEST_DEPT_CODE` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL AFTER `CASE_ID`,
+CHANGE COLUMN `REQUEST_USER_NAME` `REQUEST_DEPT_NAME` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL AFTER `REQUEST_DEPT_CODE`;
 
 ALTER TABLE `crm_escalation_log` 
 ADD COLUMN `temp_req_history_2_id` varchar(32) NULL AFTER `escalation_log_last_sample_sentence`,
