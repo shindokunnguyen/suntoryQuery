@@ -32,7 +32,7 @@ escalation_log_is_saved,
 temp_req_history_2_id
 ) SELECT 
 	history_temp.CASE_ID,
-	history_temp.REQUEST_CLASSIFICATION,
+	1 as escalation_log_mail_type,
 	history_temp.REQUEST_SUBJECT,
 	history_temp.REQUEST_CONTENT as escalation_log_body,
 	history_temp.REQUEST_CONTENT as escalation_log_body_new,
@@ -47,7 +47,7 @@ temp_req_history_2_id
 	member.member_id as escalation_log_to_id,
 	DATE_FORMAT( history_temp.REQUEST_DATETIME, '%Y-%m-%d %H:%i:%s' ) as escalation_log_send_date,
 	DATE_FORMAT( history_temp.REQUEST_DATETIME, '%H:%i' ) as escalation_log_send_time,
-	history_temp.REQUEST_USER_CODE as escalation_log_creator_code,
+	history_temp.CREATED_USER_CODE as escalation_log_creator_code,
 	DATE_FORMAT( history_temp.REQUEST_DATETIME, '%Y-%m-%d %H:%i:%s' ) as escalation_log_created_datetime,
 	history_temp.UPDATED_USER_CODE,
 	history_temp.UPDATED_USER_NAME,
@@ -89,9 +89,11 @@ JSON_OBJECT(
 	'issue_send_request_datetime',
 	DATE_FORMAT( REQUEST_DATETIME, '%Y-%m-%d %H:%i' ),
 	'issue_send_request_person_name',
-	REQUEST_USER_NAME,
-	'issue_send_request_dept_name',
+				   
+								
 	'',
+	'issue_send_request_dept_name',
+	REQUEST_DEPT_NAME,
 	'issue_send_request_subject',
 	REQUEST_SUBJECT,
 	'issue_send_request_from',
@@ -113,12 +115,12 @@ JSON_OBJECT(
 'send_request' AS history_action,
 1 AS history_level,
 DATE_FORMAT( history_temp.REQUEST_DATETIME, '%Y-%m-%d %H:%i:%s' ) AS history_created_date,
-history_temp.REQUEST_USER_CODE as history_creator_code,
-history_temp.REQUEST_USER_NAME as history_creator_name,
+history_temp.CREATED_USER_CODE as history_creator_code,
+history_temp.CREATED_USER_NAME as history_creator_name,
 history_temp.UPDATED_USER_CODE as history_updater_code,
 history_temp.UPDATED_USER_NAME as history_updater_name,
 DATE_FORMAT( history_temp.REQUEST_DATETIME, '%Y-%m-%d %H:%i:%s' ) AS history_process_date,
-DATE_FORMAT( history_temp.REQUEST_DATETIME, '%Y-%m-%d %H:%i:%s' ) AS history_updated_date  
+DATE_FORMAT( history_temp.UPDATED_DATETIME, '%Y-%m-%d %H:%i:%s' ) AS history_updated_date  
 FROM
 	crm_temp_request_history_2 AS history_temp
 LEFT JOIN crm_escalation_log as es_log ON (
