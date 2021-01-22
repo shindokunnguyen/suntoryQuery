@@ -44,9 +44,9 @@ escalation_log_is_saved
 	mail_temp.CREATED_USER_NAME,
 	DATE_FORMAT( mail_temp.CREATED_DATE_TIME, '%Y-%m-%d %H:%i:%s' ),
 	1 as escalation_log_type,
-	0 as escalation_log_send_mail_flag,
+	1 as escalation_log_send_mail_flag,
 	0 as escalation_log_approve_mail,
-	1 as escalation_log_customer_send_mail_flag,
+	0 as escalation_log_customer_send_mail_flag,
 	mail_temp.`TO` as escalation_log_list_to,
 	1 as escalation_log_request_approve_flag,
 	1 as escalation_log_is_saved
