@@ -18,7 +18,7 @@ CREATE TABLE `crm_temp_issue_mail`  (
   `SEND_DATETIME` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
   `FROM` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   `TO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-  `SUBJECT` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `SUBJECT` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
   `BODY` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
   `PARAMS` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
   PRIMARY KEY (`id`) USING BTREE,

@@ -1,18 +1,18 @@
-/*
- Navicat Premium Data Transfer
+  
+							  
 
- Source Server         : ver5
- Source Server Type    : MySQL
- Source Server Version : 80019
- Source Host           : 192.168.33.11:3306
- Source Schema         : suntory_20201120
+							 
+							  
+							  
+										   
+										 
 
- Target Server Type    : MySQL
- Target Server Version : 80019
- File Encoding         : 65001
+							  
+							  
+							  
 
- Date: 04/12/2020 13:29:09
-*/
+						  
+  
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
@@ -50,7 +50,7 @@ CREATE TABLE `crm_temp_issue_survey`  (
   `SURVEY_REQ_DEPT_NAME` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '25',
   `SURVEY_REQ_USER_CODE` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '26',
   `SURVEY_REQ_USER_NAME` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '27',
-  `SURVEY_REQ_DATE` date NULL DEFAULT NULL COMMENT '28',
+  `SURVEY_REQ_DATE` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '28',
   `CRSP_DATETIME` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '29',
   `SURVEY_APRV_REQ_DEPT_CODE` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '30',
   `SURVEY_APRV_REQ_DEPT_NAME` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '31',
