@@ -1,5 +1,8 @@
 SET sql_mode='';
 
+ALTER TABLE `crm_escalation_log` 
+ADD COLUMN `mail_temp_id` int(0) NULL;
+
 INSERT INTO crm_escalation_log (
 escalation_log_code,
 escalation_log_mail_type,
@@ -24,7 +27,8 @@ escalation_log_approve_mail,
 escalation_log_customer_send_mail_flag,
 escalation_log_list_to,
 escalation_log_request_approve_flag,
-escalation_log_is_saved
+escalation_log_is_saved,
+mail_temp_id
 ) SELECT 
 	mail_temp.CASE_ID,
 	1 as escalation_log_mail_type,
@@ -49,10 +53,15 @@ escalation_log_is_saved
 	0 as escalation_log_customer_send_mail_flag,
 	mail_temp.`TO` as escalation_log_list_to,
 	1 as escalation_log_request_approve_flag,
-	1 as escalation_log_is_saved
+	1 as escalation_log_is_saved,
+	mail_temp.id as mail_temp_id
 FROM crm_temp_issue_mail AS mail_temp
 WHERE mail_temp.MAIL_CLASSIFICATION = '送信';
 
+
+UPDATE crm_temp_issue_mail AS temp_mail
+INNER JOIN crm_escalation_log AS escalation ON ( temp_mail.id = escalation.mail_temp_id ) 
+SET temp_mail.escalation_log_id = escalation.escalation_log_id;
 
 UPDATE crm_temp_issue_mail 
 SET PARAMS = JSON_OBJECT(
@@ -129,7 +138,6 @@ history_process_date
 	1 AS history_display_flag,
 	issue_mail_temp.PARAMS,
 	'mail_process' as history_action,
-	-- IF( issue_mail_temp.MAIL_CLASSIFICATION = '受信', 'mail_process', IF ( issue_mail_temp.MAIL_CLASSIFICATION = '送信', 'send_custmail', '' ) ),
 	1 AS history_level,
 	DATE_FORMAT( issue_mail_temp.CREATED_DATE_TIME, '%Y-%m-%d %H:%i:%s' ) AS history_created_date,
 	issue_mail_temp.CREATED_USER_CODE as history_creator_code,
@@ -180,7 +188,9 @@ FROM
 		AND history.history_is_deleted = 0 
 		AND history.history_action = 'send_custmail' )
 	INNER JOIN crm_escalation_log as escalation ON (issue_mail_temp.CASE_ID = escalation.escalation_log_code 
-		AND issue_mail_temp.`SUBJECT` = escalation.escalation_log_title 
-		AND issue_mail_temp.`TO` = escalation.escalation_log_to_email_address 
-		AND issue_mail_temp.`FROM` = escalation.escalation_log_from_email_address )
+		AND issue_mail_temp.escalation_log_id = escalation.escalation_log_id )
 WHERE ( history.history_issue_code IS NULL OR history.history_issue_code = '' )  AND issue_mail_temp.MAIL_CLASSIFICATION = '送信';
+
+
+ALTER TABLE `crm_escalation_log` 
+DROP COLUMN `mail_temp_id`;

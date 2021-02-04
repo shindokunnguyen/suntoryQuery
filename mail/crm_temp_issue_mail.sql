@@ -21,15 +21,16 @@ CREATE TABLE `crm_temp_issue_mail`  (
   `SUBJECT` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
   `BODY` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
   `PARAMS` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  `escalation_log_id` int(0) NULL,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_CASE_ID`(`CASE_ID`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 ALTER TABLE `crm_temp_issue_mail` 
 ADD INDEX `idx_MAIL_CLASSIFICATION`(`MAIL_CLASSIFICATION`) USING BTREE,
-ADD INDEX `idx_TO`(`TO`) USING BTREE,
-ADD INDEX `idx_FROM`(`FROM`) USING BTREE;
+ADD INDEX `idx_escalation_id`(`escalation_log_id`) USING BTREE;
 
-CREATE INDEX idx_SUBJECT ON crm_temp_issue_mail ( SUBJECT(500) );
+ALTER TABLE `crm_escalation_log` 
+ADD COLUMN `mail_temp_id` int(0) NULL;
 
 SET FOREIGN_KEY_CHECKS = 1;
