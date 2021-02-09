@@ -58,7 +58,13 @@ corr_md_1123.issue_area_correspond_md_1123_cf_1165_datetime = DATE_FORMAT( surve
 corr_md_1123.issue_area_correspond_md_1123_cf_1165_dept_code = survey_detail_temp.INVST_APPR_REQ_DEPT_CODE,
 corr_md_1123.issue_area_correspond_md_1123_cf_1165_dept_name = survey_detail_temp.INVST_APPR_REQ_DEPT_NAME,
 corr_md_1123.issue_area_correspond_md_1123_cf_1165_person_code = survey_detail_temp.INVST_APPR_REQ_USER_CODE,
-corr_md_1123.issue_area_correspond_md_1123_cf_1165_person_name = survey_detail_temp.INVST_APPR_REQ_USER_NAME
+corr_md_1123.issue_area_correspond_md_1123_cf_1165_person_name = survey_detail_temp.INVST_APPR_REQ_USER_NAME,
+corr_md_1123.issue_area_correspond_md_1123_cf_1128_date = DATE_FORMAT( survey_detail_temp.SURV_REQ_1_DATETIME, '%Y-%m-%d' ),
+corr_md_1123.issue_area_correspond_md_1123_cf_1128_time = DATE_FORMAT( survey_detail_temp.SURV_REQ_1_DATETIME, '%H:%i' ),
+corr_md_1123.issue_area_correspond_md_1123_cf_1155_date = DATE_FORMAT( survey_detail_temp.SURV_REQ_2_DATETIME, '%Y-%m-%d' ),
+corr_md_1123.issue_area_correspond_md_1123_cf_1155_time = DATE_FORMAT( survey_detail_temp.SURV_REQ_2_DATETIME, '%H:%i' ),
+corr_md_1123.issue_area_correspond_md_1123_cf_1157_date = DATE_FORMAT( survey_detail_temp.SURV_REQ_3_DATETIME, '%Y-%m-%d' ),
+corr_md_1123.issue_area_correspond_md_1123_cf_1157_time = DATE_FORMAT( survey_detail_temp.SURV_REQ_3_DATETIME, '%H:%i' )
 WHERE
 	corr_md_1123.issue_code IS NOT NULL;
 	
@@ -119,7 +125,13 @@ issue_area_correspond_md_1123_cf_1165_datetime,
 issue_area_correspond_md_1123_cf_1165_dept_code,
 issue_area_correspond_md_1123_cf_1165_dept_name,
 issue_area_correspond_md_1123_cf_1165_person_code,
-issue_area_correspond_md_1123_cf_1165_person_name
+issue_area_correspond_md_1123_cf_1165_person_name,
+issue_area_correspond_md_1123_cf_1128_date,
+issue_area_correspond_md_1123_cf_1128_time,
+issue_area_correspond_md_1123_cf_1155_date,
+issue_area_correspond_md_1123_cf_1155_time,
+issue_area_correspond_md_1123_cf_1157_date,
+issue_area_correspond_md_1123_cf_1157_time
 ) SELECT
 survey_detail_temp.CASE_ID,
 survey_detail_temp.SURV_REQ_DESTINATION_CODE,
@@ -176,7 +188,13 @@ DATE_FORMAT( survey_detail_temp.INVST_APPR_REQ_DATE_TIME, '%Y-%m-%d %H:%i:%s' ),
 survey_detail_temp.INVST_APPR_REQ_DEPT_CODE,
 survey_detail_temp.INVST_APPR_REQ_DEPT_NAME,
 survey_detail_temp.INVST_APPR_REQ_USER_CODE,
-survey_detail_temp.INVST_APPR_REQ_USER_NAME
+survey_detail_temp.INVST_APPR_REQ_USER_NAME,
+DATE_FORMAT( survey_detail_temp.SURV_REQ_1_DATETIME, '%Y-%m-%d' ),
+DATE_FORMAT( survey_detail_temp.SURV_REQ_1_DATETIME, '%H:%i' ),
+DATE_FORMAT( survey_detail_temp.SURV_REQ_2_DATETIME, '%Y-%m-%d' ),
+DATE_FORMAT( survey_detail_temp.SURV_REQ_2_DATETIME, '%H:%i' ),
+DATE_FORMAT( survey_detail_temp.SURV_REQ_3_DATETIME, '%Y-%m-%d' ),
+DATE_FORMAT( survey_detail_temp.SURV_REQ_3_DATETIME, '%H:%i' )
 FROM
 	crm_temp_issue_survey_detail AS survey_detail_temp
 	LEFT JOIN crm_issue_area_correspond_md_1123 AS corr_md_1123 ON survey_detail_temp.CASE_ID = corr_md_1123.issue_code 

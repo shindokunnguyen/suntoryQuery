@@ -1,22 +1,3 @@
-/*
- Navicat Premium Data Transfer
-
- Source Server         : ver5
- Source Server Type    : MySQL
- Source Server Version : 80019
- Source Host           : 192.168.33.11:3306
- Source Schema         : suntory_20201120
-
- Target Server Type    : MySQL
- Target Server Version : 80019
- File Encoding         : 65001
-
- Date: 04/12/2020 11:57:13
-*/
-
-SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
-
 -- ----------------------------
 -- Table structure for crm_temp_code_mapping
 -- ----------------------------
@@ -134,36 +115,52 @@ INSERT INTO `crm_temp_code_mapping` VALUES (426, 'CUST_TOFUKEN', '44', '大分�
 INSERT INTO `crm_temp_code_mapping` VALUES (427, 'CUST_TOFUKEN', '45', '宮崎県', 45, 0, 0, NULL, '共有顧客', NULL, '都道府県', '45', '宮崎県');
 INSERT INTO `crm_temp_code_mapping` VALUES (428, 'CUST_TOFUKEN', '46', '鹿児島県', 46, 0, 0, NULL, '共有顧客', NULL, '都道府県', '46', '鹿児島県');
 INSERT INTO `crm_temp_code_mapping` VALUES (429, 'CUST_TOFUKEN', '47', '沖縄県', 47, 0, 0, NULL, '共有顧客', NULL, '都道府県', '47', '沖縄県');
-INSERT INTO `crm_temp_code_mapping` VALUES (430, 'DELAY_REASON', '1', 'お客様都合', 1, 0, 0, NULL, '対応結果', NULL, '遅延理由', '1', 'お客様都合');
-INSERT INTO `crm_temp_code_mapping` VALUES (431, 'DELAY_REASON', '2', '調査８日以上', 2, 0, 0, NULL, '対応結果', NULL, '遅延理由', '2', '調査8日以上');
-INSERT INTO `crm_temp_code_mapping` VALUES (432, 'DELAY_REASON', '3', '長期休日挟み（４連休以上）', 3, 0, 0, NULL, '対応結果', NULL, '遅延理由', '3', '長期休日挟み（4連休以上）');
-INSERT INTO `crm_temp_code_mapping` VALUES (433, 'DELAY_REASON', '4', '対応遅れ', 4, 0, 0, NULL, '対応結果', NULL, '遅延理由', '4', '対応遅れ');
-INSERT INTO `crm_temp_code_mapping` VALUES (434, 'DELAY_REASON', '5', '承認依頼遅れ', 5, 0, 0, NULL, '対応結果', NULL, '遅延理由', '5', '承認依頼遅れ');
-INSERT INTO `crm_temp_code_mapping` VALUES (435, 'NAYSAY_REASON', '1', '送付基準を満たしていない', 1, 0, 0, NULL, '対応結果', NULL, 'お客様1_声カード送付先/お客様2_声カード送付先/お客様3_声カード送付先', '1', '送付する');
-INSERT INTO `crm_temp_code_mapping` VALUES (436, 'NAYSAY_REASON', '2', '送付基準を満たすが、対応打ち切り、お客様の再対応拒否、対応苦慮（過度の補償・不当要求）', 2, 0, 0, NULL, '対応結果', NULL, 'お客様1_声カード送付先/お客様2_声カード送付先/お客様3_声カード送付先', '2', '対応苦慮の懸念がある為送付しない');
-INSERT INTO `crm_temp_code_mapping` VALUES (437, 'NAYSAY_REASON', '3', '送付基準を満たしているが、過度の補償、不当な要求を受け、対応に苦慮', 3, 0, 0, NULL, '対応結果', NULL, 'お客様1_声カード送付先/お客様2_声カード送付先/お客様3_声カード送付先', '3', '送付基準を満たしていないので送付しない');
-INSERT INTO `crm_temp_code_mapping` VALUES (438, 'PL', '1', 'なし', 1, 0, 0, NULL, '基本情報', NULL, 'PL関連情報', '1', '該当なし');
-INSERT INTO `crm_temp_code_mapping` VALUES (439, 'PL', '2', '身体異常', 2, 0, 0, NULL, '基本情報', NULL, 'PL関連情報', '2', '身体異常');
-INSERT INTO `crm_temp_code_mapping` VALUES (440, 'PL', '3', '怪我', 3, 0, 0, NULL, '基本情報', NULL, 'PL関連情報', '3', '怪我');
-INSERT INTO `crm_temp_code_mapping` VALUES (441, 'PL', '4', '物的損害', 4, 0, 0, NULL, '基本情報', NULL, 'PL関連情報', '4', '物的損害');
-INSERT INTO `crm_temp_code_mapping` VALUES (442, 'PL', '5', '健康影響(客ｾ用)', 5, 0, 0, NULL, '基本情報', NULL, 'PL関連情報', '5', '健康影響（客セ用）');
-INSERT INTO `crm_temp_code_mapping` VALUES (443, 'PRESERV_PLACE_CHANNEL', '1', '倉庫 店内(常温)', 1, 0, 0, NULL, '現品', NULL, '購入時温度', '1', '常温');
-INSERT INTO `crm_temp_code_mapping` VALUES (444, 'PRESERV_PLACE_CHANNEL', '2', 'リーチインクーラー', 2, 0, 0, NULL, '現品', NULL, '購入時温度', '3', 'コールド');
-INSERT INTO `crm_temp_code_mapping` VALUES (445, 'PRESERV_PLACE_CHANNEL', '3', 'コールドベンダー', 3, 0, 0, NULL, '現品', NULL, '購入時温度', '3', 'コールド');
-INSERT INTO `crm_temp_code_mapping` VALUES (446, 'PRESERV_PLACE_CHANNEL', '4', 'ホットベンダー', 4, 0, 0, NULL, '現品', NULL, '購入時温度', '2', 'ホット');
-INSERT INTO `crm_temp_code_mapping` VALUES (447, 'PRESERV_PLACE_CHANNEL', '5', '缶ウォーマー', 5, 0, 0, NULL, '現品', NULL, '購入時温度', '2', 'ホット');
-INSERT INTO `crm_temp_code_mapping` VALUES (448, 'PRESERV_PLACE_CHANNEL', '6', 'その他', 6, 0, 0, NULL, '現品', NULL, '購入時温度', '6', 'その他');
-INSERT INTO `crm_temp_code_mapping` VALUES (449, 'INVEST_REPORT_METHOD', '1', '調査内容（PC・タブレット説明用）', 1, 0, 0, NULL, '調査依頼', NULL, '報告方法', '1', '調査内容（PC・タブレット説明用）');
-INSERT INTO `crm_temp_code_mapping` VALUES (450, 'INVEST_REPORT_METHOD', '2', '社外報告書(特例)　【企画長、支店長了承必須】', 4, 0, 0, NULL, '調査依頼', NULL, '報告方法', '2', '社外報告書(特例)　【企画長、支店長了承必須】');
-INSERT INTO `crm_temp_code_mapping` VALUES (451, 'INVEST_REPORT_METHOD', '3', 'コメント（社内確認用）', 2, 0, 0, NULL, '調査依頼', NULL, '報告方法', '3', 'コメント（社内確認用）');
-INSERT INTO `crm_temp_code_mapping` VALUES (452, 'INVEST_REPORT_METHOD', '4', '報告不要', 3, 0, 0, NULL, '調査依頼', NULL, '報告方法', '4', '報告不要');
-INSERT INTO `crm_temp_code_mapping` VALUES (453, 'INVEST_REPORT_METHOD', '5', '--------------------------------------------', 5, 0, 0, NULL, '調査依頼', NULL, '報告方法', '', '');
-INSERT INTO `crm_temp_code_mapping` VALUES (454, 'INVEST_REPORT_METHOD', '6', '調査報告（ウエルネス用）', 6, 0, 0, NULL, '調査依頼', NULL, '報告方法', '6', '調査報告（ウエルネス用）');
-INSERT INTO `crm_temp_code_mapping` VALUES (455, 'COST_DETAIL', '-1', 'サントリー', 1, 0, 0, NULL, '対応結果', NULL, '項細目', '1', 'サントリー');
-INSERT INTO `crm_temp_code_mapping` VALUES (456, 'COST_DETAIL', '-2', 'サントリーフーズ', 2, 0, 0, NULL, '対応結果', NULL, '項細目', '２', 'サントリーフーズ');
-INSERT INTO `crm_temp_code_mapping` VALUES (457, 'COST_DETAIL', '11', 'C情報対応費', 3, 0, 0, NULL, '対応結果', NULL, '項細目', '11', 'ご指摘情報対応費');
-INSERT INTO `crm_temp_code_mapping` VALUES (458, 'COST_DETAIL', '21', '22220：販贈', 4, 0, 0, NULL, '対応結果', NULL, '項細目', '21', '【SFS】22220：販贈');
-INSERT INTO `crm_temp_code_mapping` VALUES (459, 'COST_DETAIL', '22', '57690：その他雑損', 5, 0, 0, NULL, '対応結果', NULL, '項細目', '22', '【SFS】57690：その他雑損');
-INSERT INTO `crm_temp_code_mapping` VALUES (460, 'COST_DETAIL', '23', '55407：ご指摘商品代替品費', 6, 0, 0, NULL, '対応結果', NULL, '項細目', '23', '【SFS】55407：ご指摘商品代替品費');
+INSERT INTO `crm_temp_code_mapping` VALUES (430, 'CUST_TOFUKEN', '48', 'その他', 48, 0, 0, NULL, '共有顧客', NULL, '都道府県', '48', 'その他');
+INSERT INTO `crm_temp_code_mapping` VALUES (431, 'CUST_TOFUKEN', '49', '不明', 49, 0, 0, NULL, '共有顧客', NULL, '都道府県', '49', '不明');
+INSERT INTO `crm_temp_code_mapping` VALUES (432, 'CUST_TOFUKEN', '99', 'その他', 48, 0, 0, NULL, '共有顧客', NULL, '都道府県', '48', 'その他');
+INSERT INTO `crm_temp_code_mapping` VALUES (433, 'CUST_TOFUKEN', '1', '北海道', 1, 0, 0, NULL, '共有顧客', NULL, '都道府県', '1', '北海道');
+INSERT INTO `crm_temp_code_mapping` VALUES (434, 'CUST_TOFUKEN', '2', '青森県', 2, 0, 0, NULL, '共有顧客', NULL, '都道府県', '2', '青森県');
+INSERT INTO `crm_temp_code_mapping` VALUES (435, 'CUST_TOFUKEN', '3', '岩手県', 3, 0, 0, NULL, '共有顧客', NULL, '都道府県', '3', '岩手県');
+INSERT INTO `crm_temp_code_mapping` VALUES (436, 'CUST_TOFUKEN', '4', '宮城県', 4, 0, 0, NULL, '共有顧客', NULL, '都道府県', '4', '宮城県');
+INSERT INTO `crm_temp_code_mapping` VALUES (437, 'CUST_TOFUKEN', '5', '秋田県', 5, 0, 0, NULL, '共有顧客', NULL, '都道府県', '5', '秋田県');
+INSERT INTO `crm_temp_code_mapping` VALUES (438, 'CUST_TOFUKEN', '6', '山形県', 6, 0, 0, NULL, '共有顧客', NULL, '都道府県', '6', '山形県');
+INSERT INTO `crm_temp_code_mapping` VALUES (439, 'CUST_TOFUKEN', '7', '福島県', 7, 0, 0, NULL, '共有顧客', NULL, '都道府県', '7', '福島県');
+INSERT INTO `crm_temp_code_mapping` VALUES (440, 'CUST_TOFUKEN', '8', '茨城県', 8, 0, 0, NULL, '共有顧客', NULL, '都道府県', '8', '茨城県');
+INSERT INTO `crm_temp_code_mapping` VALUES (441, 'CUST_TOFUKEN', '9', '栃木県', 9, 0, 0, NULL, '共有顧客', NULL, '都道府県', '9', '栃木県');
+INSERT INTO `crm_temp_code_mapping` VALUES (442, 'DELAY_REASON', '1', 'お客様都合', 1, 0, 0, NULL, '対応結果', NULL, '遅延理由', '1', 'お客様都合');
+INSERT INTO `crm_temp_code_mapping` VALUES (443, 'DELAY_REASON', '2', '調査８日以上', 2, 0, 0, NULL, '対応結果', NULL, '遅延理由', '2', '調査8日以上');
+INSERT INTO `crm_temp_code_mapping` VALUES (444, 'DELAY_REASON', '3', '長期休日挟み（４連休以上）', 3, 0, 0, NULL, '対応結果', NULL, '遅延理由', '3', '長期休日挟み（4連休以上）');
+INSERT INTO `crm_temp_code_mapping` VALUES (445, 'DELAY_REASON', '4', '対応遅れ', 4, 0, 0, NULL, '対応結果', NULL, '遅延理由', '4', '対応遅れ');
+INSERT INTO `crm_temp_code_mapping` VALUES (446, 'DELAY_REASON', '5', '承認依頼遅れ', 5, 0, 0, NULL, '対応結果', NULL, '遅延理由', '5', '承認依頼遅れ');
+INSERT INTO `crm_temp_code_mapping` VALUES (447, 'DELAY_REASON', '98', '不要', 5, 0, 0, NULL, '対応結果', NULL, '遅延理由', '98', '不要');
+INSERT INTO `crm_temp_code_mapping` VALUES (448, 'DELAY_REASON', '99', '後日承認', 5, 0, 0, NULL, '対応結果', NULL, '遅延理由', '99', '後日承認');
+INSERT INTO `crm_temp_code_mapping` VALUES (449, 'DELAY_REASON', '99', '承認遅れ', 5, 0, 0, NULL, '対応結果', NULL, '遅延理由', '99', '後日承認');
+INSERT INTO `crm_temp_code_mapping` VALUES (450, 'NAYSAY_REASON', '1', '送付基準を満たしていない', 1, 0, 0, NULL, '対応結果', NULL, 'お客様1_声カード送付先/お客様2_声カード送付先/お客様3_声カード送付先', '3', '送付する');
+INSERT INTO `crm_temp_code_mapping` VALUES (451, 'NAYSAY_REASON', '2', '送付基準を満たすが、対応打ち切り、お客様の再対応拒否、対応苦慮（過度の補償・不当要求）', 2, 0, 0, NULL, '対応結果', NULL, 'お客様1_声カード送付先/お客様2_声カード送付先/お客様3_声カード送付先', '2', '対応苦慮の懸念がある為送付しない');
+INSERT INTO `crm_temp_code_mapping` VALUES (452, 'NAYSAY_REASON', '3', '送付基準を満たしているが、過度の補償、不当な要求を受け、対応に苦慮', 3, 0, 1, NULL, '対応結果', NULL, 'お客様1_声カード送付先/お客様2_声カード送付先/お客様3_声カード送付先', '2', '送付基準を満たしていないので送付しない');
+INSERT INTO `crm_temp_code_mapping` VALUES (453, 'NAYSAY_REASON', '2', '送付基準を満たしているが、当社から対応打ち切りしたか、またはお客様が当社の再対応を断った', 3, 0, 1, NULL, '対応結果', NULL, 'お客様1_声カード送付先/お客様2_声カード送付先/お客様3_声カード送付先', '2', '対応苦慮の懸念がある為送付しない');
+INSERT INTO `crm_temp_code_mapping` VALUES (454, 'PL', '1', 'なし', 1, 0, 0, NULL, '基本情報', NULL, 'PL関連情報', '1', '該当なし');
+INSERT INTO `crm_temp_code_mapping` VALUES (455, 'PL', '2', '身体異常', 2, 0, 0, NULL, '基本情報', NULL, 'PL関連情報', '2', '身体異常');
+INSERT INTO `crm_temp_code_mapping` VALUES (456, 'PL', '3', '怪我', 3, 0, 0, NULL, '基本情報', NULL, 'PL関連情報', '3', '怪我');
+INSERT INTO `crm_temp_code_mapping` VALUES (457, 'PL', '4', '物的損害', 4, 0, 0, NULL, '基本情報', NULL, 'PL関連情報', '4', '物的損害');
+INSERT INTO `crm_temp_code_mapping` VALUES (458, 'PL', '5', '健康影響(客ｾ用)', 5, 0, 0, NULL, '基本情報', NULL, 'PL関連情報', '5', '健康影響（客セ用）');
+INSERT INTO `crm_temp_code_mapping` VALUES (459, 'PRESERV_PLACE_CHANNEL', '1', '倉庫 店内(常温)', 1, 0, 0, NULL, '現品', NULL, '購入時温度', '1', '常温');
+INSERT INTO `crm_temp_code_mapping` VALUES (460, 'PRESERV_PLACE_CHANNEL', '2', 'リーチインクーラー', 2, 0, 0, NULL, '現品', NULL, '購入時温度', '3', 'コールド');
+INSERT INTO `crm_temp_code_mapping` VALUES (461, 'PRESERV_PLACE_CHANNEL', '3', 'コールドベンダー', 3, 0, 0, NULL, '現品', NULL, '購入時温度', '3', 'コールド');
+INSERT INTO `crm_temp_code_mapping` VALUES (462, 'PRESERV_PLACE_CHANNEL', '4', 'ホットベンダー', 4, 0, 0, NULL, '現品', NULL, '購入時温度', '2', 'ホット');
+INSERT INTO `crm_temp_code_mapping` VALUES (463, 'PRESERV_PLACE_CHANNEL', '5', '缶ウォーマー', 5, 0, 0, NULL, '現品', NULL, '購入時温度', '2', 'ホット');
+INSERT INTO `crm_temp_code_mapping` VALUES (464, 'PRESERV_PLACE_CHANNEL', '6', 'その他', 6, 0, 0, NULL, '現品', NULL, '購入時温度', '6', 'その他');
+INSERT INTO `crm_temp_code_mapping` VALUES (465, 'INVEST_REPORT_METHOD', '1', '調査内容（PC・タブレット説明用）', 1, 0, 0, NULL, '調査依頼', NULL, '報告方法', '1', '調査内容（PC・タブレット説明用）');
+INSERT INTO `crm_temp_code_mapping` VALUES (466, 'INVEST_REPORT_METHOD', '2', '社外報告書(特例)　【企画長、支店長了承必須】', 4, 0, 0, NULL, '調査依頼', NULL, '報告方法', '2', '社外報告書(特例)　【企画長、支店長了承必須】');
+INSERT INTO `crm_temp_code_mapping` VALUES (467, 'INVEST_REPORT_METHOD', '3', 'コメント（社内確認用）', 2, 0, 0, NULL, '調査依頼', NULL, '報告方法', '3', 'コメント（社内確認用）');
+INSERT INTO `crm_temp_code_mapping` VALUES (468, 'INVEST_REPORT_METHOD', '4', '報告不要', 3, 0, 0, NULL, '調査依頼', NULL, '報告方法', '4', '報告不要');
+INSERT INTO `crm_temp_code_mapping` VALUES (469, 'INVEST_REPORT_METHOD', '5', '--------------------------------------------', 5, 0, 0, NULL, '調査依頼', NULL, '報告方法', '', '');
+INSERT INTO `crm_temp_code_mapping` VALUES (470, 'INVEST_REPORT_METHOD', '6', '調査報告（ウエルネス用）', 6, 0, 0, NULL, '調査依頼', NULL, '報告方法', '6', '調査報告（ウエルネス用）');
+INSERT INTO `crm_temp_code_mapping` VALUES (471, 'COST_DETAIL', '-1', 'サントリー', 1, 0, 0, NULL, '対応結果', NULL, '項細目', '1', 'サントリー');
+INSERT INTO `crm_temp_code_mapping` VALUES (472, 'COST_DETAIL', '-2', 'サントリーフーズ', 2, 0, 0, NULL, '対応結果', NULL, '項細目', '２', 'サントリーフーズ');
+INSERT INTO `crm_temp_code_mapping` VALUES (473, 'COST_DETAIL', '11', 'C情報対応費', 3, 0, 0, NULL, '対応結果', NULL, '項細目', '11', 'ご指摘情報対応費');
+INSERT INTO `crm_temp_code_mapping` VALUES (474, 'COST_DETAIL', '21', '22220：販贈', 4, 0, 0, NULL, '対応結果', NULL, '項細目', '21', '【SFS】22220：販贈');
+INSERT INTO `crm_temp_code_mapping` VALUES (475, 'COST_DETAIL', '22', '57690：その他雑損', 5, 0, 0, NULL, '対応結果', NULL, '項細目', '22', '【SFS】57690：その他雑損');
+INSERT INTO `crm_temp_code_mapping` VALUES (476, 'COST_DETAIL', '23', '55407：ご指摘商品代替品費', 6, 0, 0, NULL, '対応結果', NULL, '項細目', '23', '【SFS】55407：ご指摘商品代替品費');
 
 SET FOREIGN_KEY_CHECKS = 1;

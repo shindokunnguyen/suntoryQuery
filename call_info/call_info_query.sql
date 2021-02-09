@@ -39,8 +39,8 @@ crm_recovoice.recovoice_id,
 IF (call_info.LINE_CLASSIFICATION = '発信', 0, 1),
 1 as issue_recovoice_keep_flag,
 1 as issue_recovoice_is_guaranted, 
-1 as issue_recovoice_is_security,
-1 as issue_recovoice_is_public
+0 as issue_recovoice_is_security,
+0 as issue_recovoice_is_public
 FROM
 	crm_temp_call_info AS call_info
 	INNER JOIN crm_recovoice ON (

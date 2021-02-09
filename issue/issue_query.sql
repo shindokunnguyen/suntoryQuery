@@ -31,15 +31,15 @@ SET CRSP_RESULT_NAME_3 = code_mapping.TARGET_ITEM_NAME;
 
 UPDATE `crm_temp_issue_info` AS temp_issue
 INNER JOIN crm_temp_code_mapping AS code_mapping ON ( temp_issue.NAYSAY_REASON_CODE_1 = code_mapping.SOURCE_CLASS_VALUE AND code_mapping.SOURCE_CLASS = 'NAYSAY_REASON' ) 
-SET NAYSAY_REASON_NAME_1 = code_mapping.TARGET_ITEM_NAME;
+xSET NAYSAY_REASON_NAME_1 = code_mapping.TARGET_ITEM_NAME, NAYSAY_REASON_CODE_1 = code_mapping.TARGET_ITEM_CODE;
 
 UPDATE `crm_temp_issue_info` AS temp_issue
 INNER JOIN crm_temp_code_mapping AS code_mapping ON ( temp_issue.NAYSAY_REASON_CODE_2 = code_mapping.SOURCE_CLASS_VALUE AND code_mapping.SOURCE_CLASS = 'NAYSAY_REASON' ) 
-SET NAYSAY_REASON_NAME_2 = code_mapping.TARGET_ITEM_NAME;
+SET NAYSAY_REASON_NAME_2 = code_mapping.TARGET_ITEM_NAME, NAYSAY_REASON_CODE_2 = code_mapping.TARGET_ITEM_CODE;
 
 UPDATE `crm_temp_issue_info` AS temp_issue
 INNER JOIN crm_temp_code_mapping AS code_mapping ON ( temp_issue.NAYSAY_REASON_CODE_3 = code_mapping.SOURCE_CLASS_VALUE AND code_mapping.SOURCE_CLASS = 'NAYSAY_REASON' ) 
-SET NAYSAY_REASON_NAME_3 = code_mapping.TARGET_ITEM_NAME;
+SET NAYSAY_REASON_NAME_3 = code_mapping.TARGET_ITEM_NAME, NAYSAY_REASON_CODE_3 = code_mapping.TARGET_ITEM_CODE;
 
 UPDATE `crm_temp_issue_info` AS temp_issue
 INNER JOIN crm_temp_code_mapping AS code_mapping ON ( temp_issue.TMP_COST_DETAILS_CODE = code_mapping.SOURCE_CLASS_VALUE AND code_mapping.SOURCE_CLASS = 'COST_DETAIL' ) 

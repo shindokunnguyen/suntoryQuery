@@ -1,19 +1,3 @@
-/*
- Navicat Premium Data Transfer
-
- Source Server         : ver5
- Source Server Type    : MySQL
- Source Server Version : 80019
- Source Host           : 192.168.33.11:3306
- Source Schema         : suntory_20201120
-
- Target Server Type    : MySQL
- Target Server Version : 80019
- File Encoding         : 65001
-
- Date: 04/12/2020 13:35:19
-*/
-
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
@@ -71,5 +55,10 @@ CREATE TABLE `crm_temp_issue_survey_detail`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_CASE_ID`(`CASE_ID`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+ALTER TABLE `crm_temp_issue_survey_detail` 
+ADD COLUMN `SURV_REQ_1_DATETIME` varchar(32) NULL COMMENT '46' AFTER `SURV_REQ_1_CONTENT`,
+ADD COLUMN `SURV_REQ_2_DATETIME` varchar(32) NULL COMMENT '47' AFTER `SURV_REQ_2_USER_NAME`,
+ADD COLUMN `SURV_REQ_3_DATETIME` varchar(32) NULL COMMENT '48' AFTER `SURV_REQ_3_CONTENT`;
 
 SET FOREIGN_KEY_CHECKS = 1;
