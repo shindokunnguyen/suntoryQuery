@@ -26,7 +26,7 @@ SET attachment_type =
 IF
     ( attachment_type = '新規案件', 'issue_area_correspond_tab_1_cf_291', 
     IF ( attachment_type = '調査完了報告（承認依頼） - 調査', 'issue_area_correspond_tab_3_cf_174', 
-        IF ( attachment_type = '調査完了報告（承認依頼） - 詳細調査', 'issue_area_correspond_md_1123_cf_1164', 'issue_cus_process' ) 
+        IF ( attachment_type = '調査完了報告（承認依頼） - 詳細調査', 'issue_area_correspond_tab_4_cf_1358', 'issue_cus_process' ) 
     ) 
 ) 
 WHERE
@@ -35,17 +35,17 @@ WHERE
 
 -- update attachment_category
 
-UPDATE crm_attachment AS attach
-INNER JOIN (
-    SELECT
-        attachment_id,
-        ROW_NUMBER () OVER ( PARTITION BY attachment_type, attachment_issue_code ORDER BY attachment_id ASC ) AS my_category_id,
-        attachment_type,
-        attachment_issue_code 
-    FROM
-        crm_attachment 
-    WHERE
-        attachment_type = 'issue_area_correspond_md_1123_cf_1164' 
-        AND attachment_migration_no = 1 
-    ) AS temp ON attach.attachment_id = temp.attachment_id 
-    SET attach.attachment_category_id = (temp.my_category_id -1 )
+-- UPDATE crm_attachment AS attach
+-- INNER JOIN (
+--    SELECT
+--        attachment_id,
+--        ROW_NUMBER () OVER ( PARTITION BY attachment_type, attachment_issue_code ORDER BY attachment_id ASC ) AS my_category_id,
+--        attachment_type,
+--        attachment_issue_code 
+--    FROM
+--        crm_attachment 
+--    WHERE
+--        attachment_type = 'issue_area_correspond_tab_4_cf_1358' 
+--        AND attachment_migration_no = 1 
+--    ) AS temp ON attach.attachment_id = temp.attachment_id 
+--    SET attach.attachment_category_id = (temp.my_category_id -1 )

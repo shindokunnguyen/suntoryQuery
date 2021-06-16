@@ -1,0 +1,35 @@
+TRUNCATE crm_issue_area_common;
+TRUNCATE crm_issue_area_correspond_tab_8;
+TRUNCATE crm_issue_area_correspond_tab_11;
+TRUNCATE crm_issue_area_correspond_tab_1;
+TRUNCATE crm_issue_area_correspond_md_1079;
+TRUNCATE crm_issue_cust;
+TRUNCATE crm_issue_master_module_33_655;
+TRUNCATE crm_issue_area_correspond_tab_3;
+TRUNCATE crm_issue_area_correspond_tab_2;
+TRUNCATE crm_issue_area_correspond_md_161;
+TRUNCATE crm_issue_area_correspond_md_1053;
+TRUNCATE crm_issue_area_correspond_md_1123;
+TRUNCATE crm_issue_history;
+TRUNCATE crm_issue_area_correspond_md_1109;
+TRUNCATE crm_issue_related;
+TRUNCATE crm_issue_area_correspond_tab_4;
+TRUNCATE crm_issue_area_correspond_tab_13;
+TRUNCATE crm_issue_area_correspond_tab_5;
+TRUNCATE crm_issue_cus_process;
+TRUNCATE crm_issue_recovoice;
+TRUNCATE crm_issue_todo;
+TRUNCATE crm_issue_area_correspond_tab_10;
+TRUNCATE crm_issue_area_correspond_tab_20;
+TRUNCATE crm_issue_comment;
+TRUNCATE crm_issue_risk;
+TRUNCATE crm_issue_risk_logs;
+TRUNCATE crm_issue;
+TRUNCATE crm_master_39;
+TRUNCATE crm_master_39_history;
+TRUNCATE crm_escalation_log;
+TRUNCATE crm_recovoice_file;
+TRUNCATE crm_recovoice;
+
+DELETE FROM crm_attachment
+WHERE attachment_issue_code IS NOT NULL AND attachment_issue_code != '';

@@ -1,5 +1,9 @@
 SET sql_mode='';
 
+UPDATE `crm_temp_issue_survey`
+SET FILE_NAME = '$file_path'
+WHERE FILE_NAME IS NULL;
+
 UPDATE `crm_temp_issue_survey` AS temp_servey
 INNER JOIN crm_temp_code_mapping AS code_mapping ON ( temp_servey.REPORT_CLASS_CODE = code_mapping.SOURCE_CLASS_VALUE AND code_mapping.SOURCE_CLASS = 'INVEST_REPORT_METHOD' ) 
 SET REPORT_CLASS_CODE = code_mapping.TARGET_ITEM_CODE;
@@ -41,8 +45,10 @@ tab3.issue_area_correspond_tab_3_cf_175_person_name = survey_temp.SURVEY_RESULT_
 tab3.issue_area_correspond_tab_3_cf_816_date = DATE_FORMAT(survey_temp.COMPLETE_DATE,'%Y-%m-%d'),
 tab3.issue_area_correspond_tab_3_cf_816_time = DATE_FORMAT(survey_temp.COMPLETE_DATE,'%H:%i'),
 tab3.issue_area_correspond_tab_3_cf_816_datetime = DATE_FORMAT(survey_temp.COMPLETE_DATE,'%Y-%m-%d %H:%i:%s'),
-tab3.issue_area_correspond_tab_3_cf_703_code = null,
-tab3.issue_area_correspond_tab_3_cf_703_name = null
+tab3.issue_area_correspond_tab_3_cf_703_code = '',
+tab3.issue_area_correspond_tab_3_cf_703_name = '',
+tab3.issue_area_correspond_tab_3_cf_1344 = survey_temp.RESULT,
+tab3.issue_area_correspond_tab_3_cf_1344_search = search_field(survey_temp.RESULT)
 WHERE
 	tab3.issue_code IS NOT NULL;
 	
@@ -79,7 +85,9 @@ issue_area_correspond_tab_3_cf_816_date,
 issue_area_correspond_tab_3_cf_816_time,
 issue_area_correspond_tab_3_cf_816_datetime,
 issue_area_correspond_tab_3_cf_703_code,
-issue_area_correspond_tab_3_cf_703_name
+issue_area_correspond_tab_3_cf_703_name,
+issue_area_correspond_tab_3_cf_1344,
+issue_area_correspond_tab_3_cf_1344_search
 ) SELECT
 survey_temp.CASE_ID,
 survey_temp.CRSP_ORG_CD,
@@ -111,8 +119,10 @@ survey_temp.SURVEY_RESULT_APRV_TARGET_USER_NAME,
 DATE_FORMAT(survey_temp.COMPLETE_DATE,'%Y-%m-%d'),
 DATE_FORMAT(survey_temp.COMPLETE_DATE,'%H:%i'),
 DATE_FORMAT(survey_temp.COMPLETE_DATE,'%Y-%m-%d %H:%i:%s'),
-null as issue_area_correspond_tab_3_cf_703_code,
-null as issue_area_correspond_tab_3_cf_703_name
+'' as issue_area_correspond_tab_3_cf_703_code,
+'' as issue_area_correspond_tab_3_cf_703_name,
+survey_temp.RESULT as issue_area_correspond_tab_3_cf_1344,
+search_field(survey_temp.RESULT) as issue_area_correspond_tab_3_cf_1344_search
 FROM
 	crm_temp_issue_survey AS survey_temp
 	LEFT JOIN crm_issue_area_correspond_tab_3 AS tab3 ON survey_temp.CASE_ID = tab3.issue_code
@@ -129,8 +139,8 @@ SET tab2.issue_area_correspond_tab_2_cf_51 = survey_temp.SURVEY_REQ_CONTENT,
 tab2.issue_area_correspond_tab_2_cf_51_search = search_field ( survey_temp.SURVEY_REQ_CONTENT ),
 tab2.issue_area_correspond_tab_2_cf_53_code = survey_temp.REPORT_CLASS_CODE,
 tab2.issue_area_correspond_tab_2_cf_53_name = survey_temp.REPORT_CLASS_NAME,
-tab2.issue_area_correspond_tab_2_cf_886 = NULL,
-tab2.issue_area_correspond_tab_2_cf_887 = NULL 
+tab2.issue_area_correspond_tab_2_cf_886 = ''
+-- tab2.issue_area_correspond_tab_2_cf_887 = NULL 
 WHERE
 	tab2.issue_code IS NOT NULL;
 	
@@ -141,16 +151,16 @@ INSERT INTO crm_issue_area_correspond_tab_2 (
 	issue_area_correspond_tab_2_cf_51_search,
 	issue_area_correspond_tab_2_cf_53_code,
 	issue_area_correspond_tab_2_cf_53_name,
-	issue_area_correspond_tab_2_cf_886,
-	issue_area_correspond_tab_2_cf_887 
+	issue_area_correspond_tab_2_cf_886
+	-- issue_area_correspond_tab_2_cf_887 
 ) SELECT
 survey_temp.CASE_ID,
 survey_temp.SURVEY_REQ_CONTENT,
 search_field ( survey_temp.SURVEY_REQ_CONTENT ),
 survey_temp.REPORT_CLASS_CODE,
 survey_temp.REPORT_CLASS_NAME,
-NULL AS issue_area_correspond_tab_2_cf_886,
-NULL AS issue_area_correspond_tab_2_cf_887 
+'' AS issue_area_correspond_tab_2_cf_886
+-- NULL AS issue_area_correspond_tab_2_cf_887 
 FROM
 	crm_temp_issue_survey AS survey_temp
 	LEFT JOIN crm_issue_area_correspond_tab_2 AS tab2 ON survey_temp.CASE_ID = tab2.issue_code 
@@ -316,28 +326,28 @@ WHERE
 	
 	
 -- update issue_area_correspond_md_1053
-UPDATE crm_issue_area_correspond_md_1053 AS corr_md_1053
-INNER JOIN crm_temp_issue_survey AS survey_temp ON corr_md_1053.issue_code = survey_temp.CASE_ID
-SET 
-corr_md_1053.issue_area_correspond_md_1053_cf_1054 = survey_temp.RESULT,
-corr_md_1053.issue_area_correspond_md_1053_cf_1054_search = search_field(survey_temp.RESULT)
-WHERE
-	corr_md_1053.issue_code IS NOT NULL;
+-- UPDATE crm_issue_area_correspond_md_1053 AS corr_md_1053
+-- INNER JOIN crm_temp_issue_survey AS survey_temp ON corr_md_1053.issue_code = survey_temp.CASE_ID
+-- SET 
+-- corr_md_1053.issue_area_correspond_md_1053_cf_1054 = survey_temp.RESULT,
+-- corr_md_1053.issue_area_correspond_md_1053_cf_1054_search = search_field(survey_temp.RESULT)
+-- WHERE
+--	corr_md_1053.issue_code IS NOT NULL;
 	
 -- insert issue_area_correspond_md_1053
-INSERT INTO crm_issue_area_correspond_md_1053 
-( 
-	issue_code, 
-	issue_area_correspond_md_1053_cf_1054,
-	issue_area_correspond_md_1053_cf_1054_search
-) SELECT
-	survey_temp.CASE_ID,
-	survey_temp.RESULT,
-	search_field(survey_temp.RESULT)
-FROM
-	crm_temp_issue_survey AS survey_temp
-	LEFT JOIN crm_issue_area_correspond_md_1053 AS corr_md_1053 ON survey_temp.CASE_ID = corr_md_1053.issue_code 
-WHERE
-	corr_md_1053.issue_code IS NULL 
-	OR corr_md_1053.issue_code = '';
+-- INSERT INTO crm_issue_area_correspond_md_1053 
+-- ( 
+-- 	issue_code, 
+-- 	issue_area_correspond_md_1053_cf_1054,
+-- 	issue_area_correspond_md_1053_cf_1054_search
+-- ) SELECT
+-- 	survey_temp.CASE_ID,
+-- 	survey_temp.RESULT,
+-- 	search_field(survey_temp.RESULT)
+-- FROM
+-- 	crm_temp_issue_survey AS survey_temp
+-- 	LEFT JOIN crm_issue_area_correspond_md_1053 AS corr_md_1053 ON survey_temp.CASE_ID = corr_md_1053.issue_code 
+-- WHERE
+-- 	corr_md_1053.issue_code IS NULL 
+-- 	OR corr_md_1053.issue_code = '';
 	

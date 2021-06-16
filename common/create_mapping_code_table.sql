@@ -133,12 +133,13 @@ INSERT INTO `crm_temp_code_mapping` VALUES (444, 'DELAY_REASON', '3', '長期休
 INSERT INTO `crm_temp_code_mapping` VALUES (445, 'DELAY_REASON', '4', '対応遅れ', 4, 0, 0, NULL, '対応結果', NULL, '遅延理由', '4', '対応遅れ');
 INSERT INTO `crm_temp_code_mapping` VALUES (446, 'DELAY_REASON', '5', '承認依頼遅れ', 5, 0, 0, NULL, '対応結果', NULL, '遅延理由', '5', '承認依頼遅れ');
 INSERT INTO `crm_temp_code_mapping` VALUES (447, 'DELAY_REASON', '98', '不要', 5, 0, 0, NULL, '対応結果', NULL, '遅延理由', '98', '不要');
-INSERT INTO `crm_temp_code_mapping` VALUES (448, 'DELAY_REASON', '99', '後日承認', 5, 0, 0, NULL, '対応結果', NULL, '遅延理由', '99', '後日承認');
-INSERT INTO `crm_temp_code_mapping` VALUES (449, 'DELAY_REASON', '99', '承認遅れ', 5, 0, 0, NULL, '対応結果', NULL, '遅延理由', '99', '後日承認');
-INSERT INTO `crm_temp_code_mapping` VALUES (450, 'NAYSAY_REASON', '1', '送付基準を満たしていない', 1, 0, 0, NULL, '対応結果', NULL, 'お客様1_声カード送付先/お客様2_声カード送付先/お客様3_声カード送付先', '3', '送付する');
+INSERT INTO `crm_temp_code_mapping` VALUES (448, 'DELAY_REASON', '99', '後日承認', 5, 0, 0, NULL, '対応結果', NULL, '遅延理由', '6', '承認依頼後の14日超過');
+INSERT INTO `crm_temp_code_mapping` VALUES (449, 'DELAY_REASON', '99', '承認遅れ', 5, 0, 0, NULL, '対応結果', NULL, '遅延理由', '6', '承認依頼後の14日超過');
+INSERT INTO `crm_temp_code_mapping` VALUES (450, 'NAYSAY_REASON', '1', '送付基準を満たしていない', 1, 0, 0, NULL, '対応結果', NULL, 'お客様1_声カード送付先/お客様2_声カード送付先/お客様3_声カード送付先', '3', '送付基準を満たしていないので送付しない');
 INSERT INTO `crm_temp_code_mapping` VALUES (451, 'NAYSAY_REASON', '2', '送付基準を満たすが、対応打ち切り、お客様の再対応拒否、対応苦慮（過度の補償・不当要求）', 2, 0, 0, NULL, '対応結果', NULL, 'お客様1_声カード送付先/お客様2_声カード送付先/お客様3_声カード送付先', '2', '対応苦慮の懸念がある為送付しない');
-INSERT INTO `crm_temp_code_mapping` VALUES (452, 'NAYSAY_REASON', '3', '送付基準を満たしているが、過度の補償、不当な要求を受け、対応に苦慮', 3, 0, 1, NULL, '対応結果', NULL, 'お客様1_声カード送付先/お客様2_声カード送付先/お客様3_声カード送付先', '2', '送付基準を満たしていないので送付しない');
+INSERT INTO `crm_temp_code_mapping` VALUES (452, 'NAYSAY_REASON', '3', '送付基準を満たしているが、過度の補償、不当な要求を受け、対応に苦慮', 3, 0, 1, NULL, '対応結果', NULL, 'お客様1_声カード送付先/お客様2_声カード送付先/お客様3_声カード送付先', '2', '対応苦慮の懸念がある為送付しない');
 INSERT INTO `crm_temp_code_mapping` VALUES (453, 'NAYSAY_REASON', '2', '送付基準を満たしているが、当社から対応打ち切りしたか、またはお客様が当社の再対応を断った', 3, 0, 1, NULL, '対応結果', NULL, 'お客様1_声カード送付先/お客様2_声カード送付先/お客様3_声カード送付先', '2', '対応苦慮の懸念がある為送付しない');
+
 INSERT INTO `crm_temp_code_mapping` VALUES (454, 'PL', '1', 'なし', 1, 0, 0, NULL, '基本情報', NULL, 'PL関連情報', '1', '該当なし');
 INSERT INTO `crm_temp_code_mapping` VALUES (455, 'PL', '2', '身体異常', 2, 0, 0, NULL, '基本情報', NULL, 'PL関連情報', '2', '身体異常');
 INSERT INTO `crm_temp_code_mapping` VALUES (456, 'PL', '3', '怪我', 3, 0, 0, NULL, '基本情報', NULL, 'PL関連情報', '3', '怪我');
@@ -162,5 +163,7 @@ INSERT INTO `crm_temp_code_mapping` VALUES (473, 'COST_DETAIL', '11', 'C情報�
 INSERT INTO `crm_temp_code_mapping` VALUES (474, 'COST_DETAIL', '21', '22220：販贈', 4, 0, 0, NULL, '対応結果', NULL, '項細目', '21', '【SFS】22220：販贈');
 INSERT INTO `crm_temp_code_mapping` VALUES (475, 'COST_DETAIL', '22', '57690：その他雑損', 5, 0, 0, NULL, '対応結果', NULL, '項細目', '22', '【SFS】57690：その他雑損');
 INSERT INTO `crm_temp_code_mapping` VALUES (476, 'COST_DETAIL', '23', '55407：ご指摘商品代替品費', 6, 0, 0, NULL, '対応結果', NULL, '項細目', '23', '【SFS】55407：ご指摘商品代替品費');
+
+INSERT INTO `crm_temp_code_mapping` VALUES (null, 'NAYSAY_REASON', '9', '送付する', 0, 0, 0, NULL, '対応結果', NULL, 'お客様1_声カード送付先/お客様2_声カード送付先/お客様3_声カード送付先', '1', '送付する');
 
 SET FOREIGN_KEY_CHECKS = 1;

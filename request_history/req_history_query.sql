@@ -1,5 +1,10 @@
 SET sql_mode='';
 
+UPDATE `crm_temp_request_history_2`
+SET FILE_NAME = '$file_path'
+WHERE FILE_NAME IS NULL;
+
+
 INSERT INTO crm_escalation_log (
 escalation_log_code,
 escalation_log_mail_type,
@@ -89,7 +94,7 @@ JSON_OBJECT(
 	'issue_send_request_datetime',
 	DATE_FORMAT( REQUEST_DATETIME, '%Y-%m-%d %H:%i' ),
 	'issue_send_request_person_name',
-	'',
+	replace(replace(CREATED_USER_NAME,' ', ''), '　', ''),
 	'issue_send_request_dept_name',
 	REQUEST_DEPT_NAME,
 	'issue_send_request_subject',
@@ -114,9 +119,9 @@ JSON_OBJECT(
 1 AS history_level,
 DATE_FORMAT( history_temp.REQUEST_DATETIME, '%Y-%m-%d %H:%i:%s' ) AS history_created_date,
 history_temp.CREATED_USER_CODE as history_creator_code,
-history_temp.CREATED_USER_NAME as history_creator_name,
+replace(replace(history_temp.CREATED_USER_NAME,' ', ''), '　', '') as history_creator_name,
 history_temp.UPDATED_USER_CODE as history_updater_code,
-history_temp.UPDATED_USER_NAME as history_updater_name,
+replace(replace(history_temp.UPDATED_USER_NAME,' ', ''), '　', '') as history_updater_name,
 DATE_FORMAT( history_temp.REQUEST_DATETIME, '%Y-%m-%d %H:%i:%s' ) AS history_process_date,
 DATE_FORMAT( history_temp.UPDATED_DATETIME, '%Y-%m-%d %H:%i:%s' ) AS history_updated_date  
 FROM
@@ -126,10 +131,6 @@ LEFT JOIN crm_escalation_log as es_log ON (
 	AND es_log.escalation_log_from_email_address = 'test_webmaster2@suntory.co.jp'
 );
 	
-	
-	
 ALTER TABLE `crm_escalation_log` 
 DROP COLUMN `temp_req_history_2_id`,
 DROP INDEX `idx_temp_req_history_2_id`;
-	
-	

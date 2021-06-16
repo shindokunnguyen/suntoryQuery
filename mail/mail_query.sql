@@ -1,7 +1,8 @@
 SET sql_mode='';
 
-ALTER TABLE `crm_escalation_log` 
-ADD COLUMN `mail_temp_id` int(0) NULL;
+UPDATE `crm_temp_issue_mail`
+SET FILE_NAME = '$file_path'
+WHERE FILE_NAME IS NULL;
 
 INSERT INTO crm_escalation_log (
 escalation_log_code,
@@ -74,11 +75,11 @@ SET PARAMS = JSON_OBJECT(
 	'issue_send_custmail_dept_code',
 	DEPT_CODE,
 	'issue_send_custmail_person_name',
-	CREATED_USER_NAME,
+	replace(replace(CREATED_USER_NAME,' ', ''), '　', ''),
 	'issue_send_custmail_person_code',
 	CREATED_USER_CODE,
 	'issue_send_cusmail_create_date',
-	DATE_FORMAT( CREATED_DATE_TIME, '%Y-%m-%d %H:%i:%s' ),
+	DATE_FORMAT( SEND_DATETIME, '%Y-%m-%d %H:%i:%s' ),
 	'issue_send_custmail_subject',
 	`SUBJECT`,
 	'issue_send_custmail_from',
@@ -139,12 +140,12 @@ history_process_date
 	issue_mail_temp.PARAMS,
 	'mail_process' as history_action,
 	1 AS history_level,
-	DATE_FORMAT( issue_mail_temp.CREATED_DATE_TIME, '%Y-%m-%d %H:%i:%s' ) AS history_created_date,
+	DATE_FORMAT( issue_mail_temp.SEND_DATETIME, '%Y-%m-%d %H:%i:%s' ) AS history_created_date,
 	issue_mail_temp.CREATED_USER_CODE as history_creator_code,
-	issue_mail_temp.CREATED_USER_NAME as history_creator_name,
+	replace(replace(issue_mail_temp.CREATED_USER_NAME,' ', ''), '　', '') as history_creator_name,
 	issue_mail_temp.CREATED_USER_CODE as history_updater_code,
-	issue_mail_temp.CREATED_USER_NAME as history_updater_name,
-	DATE_FORMAT( issue_mail_temp.CREATED_DATE_TIME, '%Y-%m-%d %H:%i:%s' ) AS history_process_date 
+	replace(replace(issue_mail_temp.CREATED_USER_NAME,' ', ''), '　', '') as history_updater_name,
+	DATE_FORMAT( issue_mail_temp.SEND_DATETIME, '%Y-%m-%d %H:%i:%s' ) AS history_process_date 
 FROM
 	crm_temp_issue_mail AS issue_mail_temp
 	LEFT JOIN crm_issue_history AS history ON (issue_mail_temp.CASE_ID = history.history_issue_code 
@@ -176,12 +177,12 @@ history_process_date
 	issue_mail_temp.PARAMS,
 	'send_custmail' as history_action,
 	1 AS history_level,
-	DATE_FORMAT( issue_mail_temp.CREATED_DATE_TIME, '%Y-%m-%d %H:%i:%s' ) AS history_created_date,
+	DATE_FORMAT( issue_mail_temp.SEND_DATETIME, '%Y-%m-%d %H:%i:%s' ) AS history_created_date,
 	issue_mail_temp.CREATED_USER_CODE as history_creator_code,
-	issue_mail_temp.CREATED_USER_NAME as history_creator_name,
+	replace(replace(issue_mail_temp.CREATED_USER_NAME,' ', ''), '　', '') as history_creator_name,
 	issue_mail_temp.CREATED_USER_CODE as history_updater_code,
-	issue_mail_temp.CREATED_USER_NAME as history_updater_name,
-	DATE_FORMAT( issue_mail_temp.CREATED_DATE_TIME, '%Y-%m-%d %H:%i:%s' ) AS history_process_date 
+	replace(replace(issue_mail_temp.CREATED_USER_NAME,' ', ''), '　', '') as history_updater_name,
+	DATE_FORMAT( issue_mail_temp.SEND_DATETIME, '%Y-%m-%d %H:%i:%s' ) AS history_process_date 
 FROM
 	crm_temp_issue_mail AS issue_mail_temp
 	LEFT JOIN crm_issue_history AS history ON (issue_mail_temp.CASE_ID = history.history_issue_code 
@@ -190,7 +191,3 @@ FROM
 	INNER JOIN crm_escalation_log as escalation ON (issue_mail_temp.CASE_ID = escalation.escalation_log_code 
 		AND issue_mail_temp.escalation_log_id = escalation.escalation_log_id )
 WHERE ( history.history_issue_code IS NULL OR history.history_issue_code = '' )  AND issue_mail_temp.MAIL_CLASSIFICATION = '送信';
-
-
-ALTER TABLE `crm_escalation_log` 
-DROP COLUMN `mail_temp_id`;

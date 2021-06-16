@@ -22,6 +22,7 @@ CREATE TABLE `crm_temp_request_history_2`  (
   `UPDATED_USER_NAME` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   `UPDATED_DATETIME` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   `PARAMS` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  `FILE_NAME` text NULL COMMENT 'file path',
   INDEX `idx_CASE_ID`(`CASE_ID`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 

@@ -31,13 +31,21 @@ CREATE TABLE `crm_temp_call_info` (
   `PHONE_NUMB` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   `LINE_CLASSIFICATION` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   `FILE_VOICE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `FILE_NAME` text NULL COMMENT 'file path',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
-SET FOREIGN_KEY_CHECKS = 1;
 
 ALTER TABLE `crm_temp_call_info` 
 ADD INDEX `idx_CASE_ID`(`CASE_ID`) USING BTREE;
 
 ALTER TABLE `crm_temp_call_info` 
 MODIFY COLUMN `id` int(0) NOT NULL AUTO_INCREMENT FIRST;
+
+ALTER TABLE `crm_recovoice` 
+ADD COLUMN `call_info_id` int(0) NULL;
+
+ALTER TABLE `crm_temp_call_info` 
+ADD COLUMN `recovoice_id` int(0) NULL;
+
+SET FOREIGN_KEY_CHECKS = 1;

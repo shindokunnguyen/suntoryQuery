@@ -1,9 +1,24 @@
 SET sql_mode='';
 
+UPDATE `crm_temp_issue_survey_detail`
+SET FILE_NAME = '$file_path'
+WHERE FILE_NAME IS NULL;
+
+-- update ordering
+SET @sum := -1,
+@issue := '';
+UPDATE crm_temp_issue_survey_detail 
+SET ordering = ( @sum := IF ( @issue COLLATE utf8mb4_unicode_ci = CASE_ID, @sum, -1 ) + 1 ),
+_temp = ( @issue := CASE_ID) 
+ORDER BY
+	CASE_ID;
+
+
 -- update issue_area_correspond_md_1123
 UPDATE crm_issue_area_correspond_md_1123 AS corr_md_1123
-INNER JOIN crm_temp_issue_survey_detail AS survey_detail_temp ON corr_md_1123.issue_code = survey_detail_temp.CASE_ID
+INNER JOIN crm_temp_issue_survey_detail AS survey_detail_temp ON (corr_md_1123.issue_code = survey_detail_temp.CASE_ID AND corr_md_1123.issue_area_correspond_md_1123_ordering = survey_detail_temp.ordering)
 SET 
+corr_md_1123.issue_area_correspond_md_1123_ordering = survey_detail_temp.ordering,
 corr_md_1123.issue_area_correspond_md_1123_cf_1126_multil_lv2_code = survey_detail_temp.SURV_REQ_DESTINATION_CODE,
 corr_md_1123.issue_area_correspond_md_1123_cf_1126_multil_lv2_name = survey_detail_temp.SURV_REQ_DESTINATION_NAME,
 corr_md_1123.issue_area_correspond_md_1123_cf_1160_dept_code = survey_detail_temp.SURV_RESPONDENT_DEPT_CODE,
@@ -71,6 +86,7 @@ WHERE
 -- insert crm_issue_area_correspond_md_1123
 INSERT INTO crm_issue_area_correspond_md_1123 ( 
 issue_code,
+issue_area_correspond_md_1123_ordering,
 issue_area_correspond_md_1123_cf_1126_multil_lv2_code,
 issue_area_correspond_md_1123_cf_1126_multil_lv2_name,
 issue_area_correspond_md_1123_cf_1160_dept_code,
@@ -134,6 +150,7 @@ issue_area_correspond_md_1123_cf_1157_date,
 issue_area_correspond_md_1123_cf_1157_time
 ) SELECT
 survey_detail_temp.CASE_ID,
+survey_detail_temp.ordering,
 survey_detail_temp.SURV_REQ_DESTINATION_CODE,
 survey_detail_temp.SURV_REQ_DESTINATION_NAME,
 survey_detail_temp.SURV_RESPONDENT_DEPT_CODE,
@@ -197,7 +214,107 @@ DATE_FORMAT( survey_detail_temp.SURV_REQ_3_DATETIME, '%Y-%m-%d' ),
 DATE_FORMAT( survey_detail_temp.SURV_REQ_3_DATETIME, '%H:%i' )
 FROM
 	crm_temp_issue_survey_detail AS survey_detail_temp
-	LEFT JOIN crm_issue_area_correspond_md_1123 AS corr_md_1123 ON survey_detail_temp.CASE_ID = corr_md_1123.issue_code 
+	LEFT JOIN crm_issue_area_correspond_md_1123 AS corr_md_1123 ON (survey_detail_temp.CASE_ID = corr_md_1123.issue_code AND corr_md_1123.issue_area_correspond_md_1123_ordering = survey_detail_temp.ordering)
 WHERE
 	corr_md_1123.issue_code IS NULL 
 	OR corr_md_1123.issue_code = '';
+	
+	
+	
+-- update data crm_issue_area_correspond_tab_4 lv 1
+UPDATE crm_issue_area_correspond_tab_4 AS tab4
+INNER JOIN crm_issue_area_correspond_md_1123 AS corr_md_1123 ON ( tab4.issue_code = corr_md_1123.issue_code AND corr_md_1123.issue_area_correspond_md_1123_ordering = 0 ) 
+SET tab4.issue_area_correspond_tab_4_cf_1256_dept_code = corr_md_1123.issue_area_correspond_md_1123_cf_1160_dept_code,
+tab4.issue_area_correspond_tab_4_cf_1256_dept_name = corr_md_1123.issue_area_correspond_md_1123_cf_1160_dept_name,
+tab4.issue_area_correspond_tab_4_cf_1256_person_code = corr_md_1123.issue_area_correspond_md_1123_cf_1160_person_code,
+tab4.issue_area_correspond_tab_4_cf_1256_person_name = corr_md_1123.issue_area_correspond_md_1123_cf_1160_person_name,
+
+tab4.issue_area_correspond_tab_4_cf_1205_datetime = corr_md_1123.issue_area_correspond_md_1123_cf_1166_time,
+tab4.issue_area_correspond_tab_4_cf_1205_date = corr_md_1123.issue_area_correspond_md_1123_cf_1166_date,
+tab4.issue_area_correspond_tab_4_cf_1205_time = corr_md_1123.issue_area_correspond_md_1123_cf_1166_time,
+tab4.issue_area_correspond_tab_4_cf_1205_person_code = corr_md_1123.issue_area_correspond_md_1123_cf_1166_person_code,
+tab4.issue_area_correspond_tab_4_cf_1205_person_name = corr_md_1123.issue_area_correspond_md_1123_cf_1166_person_name,
+tab4.issue_area_correspond_tab_4_cf_1205_dept_code = corr_md_1123.issue_area_correspond_md_1123_cf_1166_dept_code,
+tab4.issue_area_correspond_tab_4_cf_1205_dept_name = corr_md_1123.issue_area_correspond_md_1123_cf_1166_dept_name,
+
+tab4.issue_area_correspond_tab_4_cf_1199_date = corr_md_1123.issue_area_correspond_md_1123_cf_1165_date,
+tab4.issue_area_correspond_tab_4_cf_1199_time = corr_md_1123.issue_area_correspond_md_1123_cf_1165_time,
+tab4.issue_area_correspond_tab_4_cf_1199_datetime = corr_md_1123.issue_area_correspond_md_1123_cf_1165_datetime,
+tab4.issue_area_correspond_tab_4_cf_1199_person_code = corr_md_1123.issue_area_correspond_md_1123_cf_1165_person_code,
+tab4.issue_area_correspond_tab_4_cf_1199_person_name = corr_md_1123.issue_area_correspond_md_1123_cf_1165_person_name,
+tab4.issue_area_correspond_tab_4_cf_1199_dept_code = corr_md_1123.issue_area_correspond_md_1123_cf_1165_dept_code,
+tab4.issue_area_correspond_tab_4_cf_1199_dept_name = corr_md_1123.issue_area_correspond_md_1123_cf_1165_dept_name,
+
+tab4.issue_area_correspond_tab_4_cf_1202_dept_code = corr_md_1123.issue_area_correspond_md_1123_cf_1181_dept_code,
+tab4.issue_area_correspond_tab_4_cf_1202_dept_name = corr_md_1123.issue_area_correspond_md_1123_cf_1181_dept_name,
+tab4.issue_area_correspond_tab_4_cf_1202_person_code = corr_md_1123.issue_area_correspond_md_1123_cf_1181_person_code,
+tab4.issue_area_correspond_tab_4_cf_1202_person_name = corr_md_1123.issue_area_correspond_md_1123_cf_1181_person_name
+WHERE
+	tab4.issue_code IS NOT NULL;
+	
+	
+-- update data crm_issue_area_correspond_tab_4 lv 2
+UPDATE crm_issue_area_correspond_tab_4 AS tab4
+INNER JOIN crm_issue_area_correspond_md_1123 AS corr_md_1123 ON ( 
+	tab4.issue_code = corr_md_1123.issue_code AND corr_md_1123.issue_area_correspond_md_1123_ordering = 1 
+) 
+SET tab4.issue_area_correspond_tab_4_cf_1257_dept_code = corr_md_1123.issue_area_correspond_md_1123_cf_1160_dept_code,
+tab4.issue_area_correspond_tab_4_cf_1257_dept_name = corr_md_1123.issue_area_correspond_md_1123_cf_1160_dept_name,
+tab4.issue_area_correspond_tab_4_cf_1257_person_code = corr_md_1123.issue_area_correspond_md_1123_cf_1160_person_code,
+tab4.issue_area_correspond_tab_4_cf_1257_person_name = corr_md_1123.issue_area_correspond_md_1123_cf_1160_person_name,
+
+tab4.issue_area_correspond_tab_4_cf_1206_datetime = corr_md_1123.issue_area_correspond_md_1123_cf_1166_time,
+tab4.issue_area_correspond_tab_4_cf_1206_date = corr_md_1123.issue_area_correspond_md_1123_cf_1166_date,
+tab4.issue_area_correspond_tab_4_cf_1206_time = corr_md_1123.issue_area_correspond_md_1123_cf_1166_time,
+tab4.issue_area_correspond_tab_4_cf_1206_person_code = corr_md_1123.issue_area_correspond_md_1123_cf_1166_person_code,
+tab4.issue_area_correspond_tab_4_cf_1206_person_name = corr_md_1123.issue_area_correspond_md_1123_cf_1166_person_name,
+tab4.issue_area_correspond_tab_4_cf_1206_dept_code = corr_md_1123.issue_area_correspond_md_1123_cf_1166_dept_code,
+tab4.issue_area_correspond_tab_4_cf_1206_dept_name = corr_md_1123.issue_area_correspond_md_1123_cf_1166_dept_name,
+
+tab4.issue_area_correspond_tab_4_cf_1200_date = corr_md_1123.issue_area_correspond_md_1123_cf_1165_date,
+tab4.issue_area_correspond_tab_4_cf_1200_time = corr_md_1123.issue_area_correspond_md_1123_cf_1165_time,
+tab4.issue_area_correspond_tab_4_cf_1200_datetime = corr_md_1123.issue_area_correspond_md_1123_cf_1165_datetime,
+tab4.issue_area_correspond_tab_4_cf_1200_person_code = corr_md_1123.issue_area_correspond_md_1123_cf_1165_person_code,
+tab4.issue_area_correspond_tab_4_cf_1200_person_name = corr_md_1123.issue_area_correspond_md_1123_cf_1165_person_name,
+tab4.issue_area_correspond_tab_4_cf_1200_dept_code = corr_md_1123.issue_area_correspond_md_1123_cf_1165_dept_code,
+tab4.issue_area_correspond_tab_4_cf_1200_dept_name = corr_md_1123.issue_area_correspond_md_1123_cf_1165_dept_name,
+
+tab4.issue_area_correspond_tab_4_cf_1204_dept_code = corr_md_1123.issue_area_correspond_md_1123_cf_1181_dept_code,
+tab4.issue_area_correspond_tab_4_cf_1204_dept_name = corr_md_1123.issue_area_correspond_md_1123_cf_1181_dept_name,
+tab4.issue_area_correspond_tab_4_cf_1204_person_code = corr_md_1123.issue_area_correspond_md_1123_cf_1181_person_code,
+tab4.issue_area_correspond_tab_4_cf_1204_person_name = corr_md_1123.issue_area_correspond_md_1123_cf_1181_person_name
+WHERE
+	tab4.issue_code IS NOT NULL;
+	
+-- update data crm_issue_area_correspond_tab_4 lv 3
+UPDATE crm_issue_area_correspond_tab_4 AS tab4
+INNER JOIN crm_issue_area_correspond_md_1123 AS corr_md_1123 ON ( 
+	tab4.issue_code = corr_md_1123.issue_code AND corr_md_1123.issue_area_correspond_md_1123_ordering = 2 
+) 
+SET tab4.issue_area_correspond_tab_4_cf_1258_dept_code = corr_md_1123.issue_area_correspond_md_1123_cf_1160_dept_code,
+tab4.issue_area_correspond_tab_4_cf_1258_dept_name = corr_md_1123.issue_area_correspond_md_1123_cf_1160_dept_name,
+tab4.issue_area_correspond_tab_4_cf_1258_person_code = corr_md_1123.issue_area_correspond_md_1123_cf_1160_person_code,
+tab4.issue_area_correspond_tab_4_cf_1258_person_name = corr_md_1123.issue_area_correspond_md_1123_cf_1160_person_name,
+
+tab4.issue_area_correspond_tab_4_cf_1207_datetime = corr_md_1123.issue_area_correspond_md_1123_cf_1166_time,
+tab4.issue_area_correspond_tab_4_cf_1207_date = corr_md_1123.issue_area_correspond_md_1123_cf_1166_date,
+tab4.issue_area_correspond_tab_4_cf_1207_time = corr_md_1123.issue_area_correspond_md_1123_cf_1166_time,
+tab4.issue_area_correspond_tab_4_cf_1207_person_code = corr_md_1123.issue_area_correspond_md_1123_cf_1166_person_code,
+tab4.issue_area_correspond_tab_4_cf_1207_person_name = corr_md_1123.issue_area_correspond_md_1123_cf_1166_person_name,
+tab4.issue_area_correspond_tab_4_cf_1207_dept_code = corr_md_1123.issue_area_correspond_md_1123_cf_1166_dept_code,
+tab4.issue_area_correspond_tab_4_cf_1207_dept_name = corr_md_1123.issue_area_correspond_md_1123_cf_1166_dept_name,
+
+tab4.issue_area_correspond_tab_4_cf_1201_date = corr_md_1123.issue_area_correspond_md_1123_cf_1165_date,
+tab4.issue_area_correspond_tab_4_cf_1201_time = corr_md_1123.issue_area_correspond_md_1123_cf_1165_time,
+tab4.issue_area_correspond_tab_4_cf_1201_datetime = corr_md_1123.issue_area_correspond_md_1123_cf_1165_datetime,
+tab4.issue_area_correspond_tab_4_cf_1201_person_code = corr_md_1123.issue_area_correspond_md_1123_cf_1165_person_code,
+tab4.issue_area_correspond_tab_4_cf_1201_person_name = corr_md_1123.issue_area_correspond_md_1123_cf_1165_person_name,
+tab4.issue_area_correspond_tab_4_cf_1201_dept_code = corr_md_1123.issue_area_correspond_md_1123_cf_1165_dept_code,
+tab4.issue_area_correspond_tab_4_cf_1201_dept_name = corr_md_1123.issue_area_correspond_md_1123_cf_1165_dept_name,
+
+tab4.issue_area_correspond_tab_4_cf_1203_dept_code = corr_md_1123.issue_area_correspond_md_1123_cf_1181_dept_code,
+tab4.issue_area_correspond_tab_4_cf_1203_dept_name = corr_md_1123.issue_area_correspond_md_1123_cf_1181_dept_name,
+tab4.issue_area_correspond_tab_4_cf_1203_person_code = corr_md_1123.issue_area_correspond_md_1123_cf_1181_person_code,
+tab4.issue_area_correspond_tab_4_cf_1203_person_name = corr_md_1123.issue_area_correspond_md_1123_cf_1181_person_name
+WHERE
+	tab4.issue_code IS NOT NULL;

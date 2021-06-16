@@ -1,5 +1,9 @@
 SET sql_mode='';
 
+UPDATE `crm_temp_issue_info`
+SET FILE_NAME = '$file_path'
+WHERE FILE_NAME IS NULL;
+
 -- update data temp_issue_info
 UPDATE `crm_temp_issue_info` AS temp_issue
 INNER JOIN crm_temp_code_mapping AS code_mapping ON ( temp_issue.CUST_CLASS_CODE_1 = code_mapping.SOURCE_CLASS_VALUE AND code_mapping.SOURCE_CLASS = 'CUST_CLASS' ) 
@@ -31,7 +35,7 @@ SET CRSP_RESULT_NAME_3 = code_mapping.TARGET_ITEM_NAME;
 
 UPDATE `crm_temp_issue_info` AS temp_issue
 INNER JOIN crm_temp_code_mapping AS code_mapping ON ( temp_issue.NAYSAY_REASON_CODE_1 = code_mapping.SOURCE_CLASS_VALUE AND code_mapping.SOURCE_CLASS = 'NAYSAY_REASON' ) 
-xSET NAYSAY_REASON_NAME_1 = code_mapping.TARGET_ITEM_NAME, NAYSAY_REASON_CODE_1 = code_mapping.TARGET_ITEM_CODE;
+SET NAYSAY_REASON_NAME_1 = code_mapping.TARGET_ITEM_NAME, NAYSAY_REASON_CODE_1 = code_mapping.TARGET_ITEM_CODE;
 
 UPDATE `crm_temp_issue_info` AS temp_issue
 INNER JOIN crm_temp_code_mapping AS code_mapping ON ( temp_issue.NAYSAY_REASON_CODE_2 = code_mapping.SOURCE_CLASS_VALUE AND code_mapping.SOURCE_CLASS = 'NAYSAY_REASON' ) 
@@ -52,6 +56,10 @@ SET TMP_COST_DETAILS_NAME = code_mapping.TARGET_ITEM_NAME;
 UPDATE `crm_temp_issue_info` AS temp_issue
 INNER JOIN crm_temp_code_mapping AS code_mapping ON ( temp_issue.DELAY_REASON_CODE = code_mapping.SOURCE_CLASS_VALUE AND code_mapping.SOURCE_CLASS = 'DELAY_REASON' ) 
 SET DELAY_REASON_NAME = code_mapping.TARGET_ITEM_NAME;
+
+UPDATE `crm_temp_issue_info` AS temp_issue
+INNER JOIN crm_temp_code_mapping AS code_mapping ON ( temp_issue.DELAY_REASON_CODE = code_mapping.SOURCE_CLASS_VALUE AND code_mapping.SOURCE_CLASS = 'DELAY_REASON' ) 
+SET DELAY_REASON_CODE = code_mapping.TARGET_ITEM_CODE;
 
 UPDATE `crm_temp_issue_info` AS temp_issue
 INNER JOIN crm_temp_code_mapping AS code_mapping ON ( temp_issue.CUST_GENERATION_CODE_1 = code_mapping.SOURCE_CLASS_VALUE AND code_mapping.SOURCE_CLASS = 'CUST_GENERATION' ) 
@@ -125,9 +133,9 @@ SET CUST_LANGUAGE_NAME = code_mapping.TARGET_ITEM_NAME;
 UPDATE crm_issue AS issue
 INNER JOIN crm_temp_issue_info AS issue_temp ON issue.issue_code = issue_temp.CASE_ID 
 SET issue.issue_created_dept_code = issue_temp.CREATE_ORG_CD,
-issue.issue_created_dept_name = NULL,
+issue.issue_created_dept_name = '',
 issue.issue_created_member_code = issue_temp.CREATE_USER_ID,
-issue.issue_created_member_name = NULL,
+issue.issue_created_member_name = '',
 issue.issue_created_date = DATE_FORMAT( issue_temp.RECEPT_DATE, '%Y-%m-%d' ),
 issue.issue_created_year_month = DATE_FORMAT( issue_temp.RECEPT_DATE, '%Y/%m' ),
 issue.issue_created_year = DATE_FORMAT( issue_temp.RECEPT_DATE, '%Y' ),
@@ -136,7 +144,7 @@ issue.issue_created_datetime = DATE_FORMAT( issue_temp.RECEPT_DATE, '%Y-%m-%d %H
 issue.issue_updated_dept_code = issue_temp.UPDATE_DEPT_CODE,
 issue.issue_updated_dept_name = issue_temp.UPDATE_DEPT_NAME,
 issue.issue_updated_member_code = issue_temp.UPDATE_USER_CODE,
-issue.issue_updated_member_name = issue_temp.UPDATE_USER_NAME,
+issue.issue_updated_member_name = replace(replace(issue_temp.UPDATE_USER_NAME,' ', ''), '　', ''),
 issue.issue_updated_date = DATE_FORMAT( issue_temp.UPDATE_DATE_TIME, '%Y-%m-%d' ),
 issue.issue_updated_time = DATE_FORMAT( issue_temp.UPDATE_DATE_TIME, '%H:%i' ),
 issue.issue_updated_datetime = DATE_FORMAT( issue_temp.UPDATE_DATE_TIME, '%Y-%m-%d %H:%i:%s' ),
@@ -144,14 +152,14 @@ issue.issue_receive_dept_code = issue_temp.RECEPT_ORG_CD,
 issue.issue_receive_dept_name = issue_temp.RECEPT_ORG_NAME,
 issue.issue_receive_person_code = issue_temp.RECEPT_USER_ID,
 issue.issue_receive_person_name = issue_temp.RECEPT_USER_NAME,
-issue.issue_receive_date = DATE_FORMAT( issue_temp.PROCESS_DATETIME, '%Y-%m-%d' ),
-issue.issue_receive_time = DATE_FORMAT( issue_temp.PROCESS_DATETIME, '%H:%i' ),
-issue.issue_receive_datetime = DATE_FORMAT( issue_temp.PROCESS_DATETIME, '%Y-%m-%d %H:%i:%s' ),
-issue.issue_receive_week_day = DAYNAME( DATE_FORMAT( issue_temp.PROCESS_DATETIME, '%Y-%m-%d' ) ),
-issue.issue_receive_day_hour = DATE_FORMAT( issue_temp.PROCESS_DATETIME, '%H' ),
-issue.issue_receive_month = DATE_FORMAT( issue_temp.PROCESS_DATETIME, '%m' ),
-issue.issue_receive_year = DATE_FORMAT( issue_temp.PROCESS_DATETIME, '%Y' ),
-issue.issue_receive_year_month = DATE_FORMAT( issue_temp.PROCESS_DATETIME, '%Y/%m' ),
+issue.issue_receive_date = DATE_FORMAT( issue_temp.RECEPT_DATE, '%Y-%m-%d' ),
+issue.issue_receive_time = DATE_FORMAT( issue_temp.RECEPT_DATE, '%H:%i' ),
+issue.issue_receive_datetime = DATE_FORMAT( issue_temp.RECEPT_DATE, '%Y-%m-%d %H:%i:%s' ),
+issue.issue_receive_week_day = DAYNAME( DATE_FORMAT( issue_temp.RECEPT_DATE, '%Y-%m-%d' ) ),
+issue.issue_receive_day_hour = DATE_FORMAT( issue_temp.RECEPT_DATE, '%H' ),
+issue.issue_receive_month = DATE_FORMAT( issue_temp.RECEPT_DATE, '%m' ),
+issue.issue_receive_year = DATE_FORMAT( issue_temp.RECEPT_DATE, '%Y' ),
+issue.issue_receive_year_month = DATE_FORMAT( issue_temp.RECEPT_DATE, '%Y/%m' ),
 issue.issue_finish_date = IF( IFNULL( issue_temp.COMP_DATE_TIME, '' ) = '', DATE_FORMAT( issue_temp.COMP_DATE, '%Y-%m-%d' ), DATE_FORMAT( issue_temp.COMP_DATE_TIME, '%Y-%m-%d' )),
 issue.issue_finish_datetime = IF( IFNULL( issue_temp.COMP_DATE_TIME, '' ) = '', DATE_FORMAT( issue_temp.COMP_DATE, '%Y-%m-%d %H:%i:%s' ), DATE_FORMAT( issue_temp.COMP_DATE_TIME, '%Y-%m-%d %H:%i:%s' )),
 issue.issue_finish_time = IF( IFNULL( issue_temp.COMP_DATE_TIME, '' ) = '', DATE_FORMAT( issue_temp.COMP_DATE, '%H:%i' ), DATE_FORMAT( issue_temp.COMP_DATE_TIME, '%H:%i' )),
@@ -236,9 +244,9 @@ issue_code,
 ) SELECT
 issue_temp.CASE_ID,
 issue_temp.CREATE_ORG_CD,
-NULL as issue_created_dept_name,
+'' as issue_created_dept_name,
 issue_temp.CREATE_USER_ID,
-NULL as issue_created_member_name,
+'' as issue_created_member_name,
 DATE_FORMAT( issue_temp.RECEPT_DATE, '%Y-%m-%d' ),
 DATE_FORMAT( issue_temp.RECEPT_DATE, '%Y/%m' ),
 DATE_FORMAT( issue_temp.RECEPT_DATE, '%Y' ),
@@ -247,7 +255,7 @@ DATE_FORMAT( issue_temp.RECEPT_DATE, '%Y-%m-%d %H:%i:%s' ),
 issue_temp.UPDATE_DEPT_CODE,
 issue_temp.UPDATE_DEPT_NAME,
 issue_temp.UPDATE_USER_CODE,
-issue_temp.UPDATE_USER_NAME,
+replace(replace(issue_temp.UPDATE_USER_NAME,' ', ''), '　', ''),
 DATE_FORMAT( issue_temp.UPDATE_DATE_TIME, '%Y-%m-%d' ),
 DATE_FORMAT( issue_temp.UPDATE_DATE_TIME, '%H:%i' ),
 DATE_FORMAT( issue_temp.UPDATE_DATE_TIME, '%Y-%m-%d %H:%i:%s' ),
@@ -255,14 +263,14 @@ issue_temp.RECEPT_ORG_CD,
 issue_temp.RECEPT_ORG_NAME,
 issue_temp.RECEPT_USER_ID,
 issue_temp.RECEPT_USER_NAME,
-DATE_FORMAT( issue_temp.PROCESS_DATETIME, '%Y-%m-%d' ),
-DATE_FORMAT( issue_temp.PROCESS_DATETIME, '%H:%i' ),
-DATE_FORMAT( issue_temp.PROCESS_DATETIME, '%Y-%m-%d %H:%i:%s' ),
-DAYNAME( DATE_FORMAT( issue_temp.PROCESS_DATETIME, '%Y-%m-%d' ) ),
-DATE_FORMAT( issue_temp.PROCESS_DATETIME, '%H' ),
-DATE_FORMAT( issue_temp.PROCESS_DATETIME, '%m' ),
-DATE_FORMAT( issue_temp.PROCESS_DATETIME, '%Y' ),
-DATE_FORMAT( issue_temp.PROCESS_DATETIME, '%Y/%m' ),
+DATE_FORMAT( issue_temp.RECEPT_DATE, '%Y-%m-%d' ),
+DATE_FORMAT( issue_temp.RECEPT_DATE, '%H:%i' ),
+DATE_FORMAT( issue_temp.RECEPT_DATE, '%Y-%m-%d %H:%i:%s' ),
+DAYNAME( DATE_FORMAT( issue_temp.RECEPT_DATE, '%Y-%m-%d' ) ),
+DATE_FORMAT( issue_temp.RECEPT_DATE, '%H' ),
+DATE_FORMAT( issue_temp.RECEPT_DATE, '%m' ),
+DATE_FORMAT( issue_temp.RECEPT_DATE, '%Y' ),
+DATE_FORMAT( issue_temp.RECEPT_DATE, '%Y/%m' ),
 IF( IFNULL( issue_temp.COMP_DATE_TIME, '' ) = '', DATE_FORMAT( issue_temp.COMP_DATE, '%Y-%m-%d' ), DATE_FORMAT( issue_temp.COMP_DATE_TIME, '%Y-%m-%d' )),
 IF( IFNULL( issue_temp.COMP_DATE_TIME, '' ) = '', DATE_FORMAT( issue_temp.COMP_DATE, '%Y-%m-%d %H:%i:%s' ), DATE_FORMAT( issue_temp.COMP_DATE_TIME, '%Y-%m-%d %H:%i:%s' )),
 IF( IFNULL( issue_temp.COMP_DATE_TIME, '' ) = '', DATE_FORMAT( issue_temp.COMP_DATE, '%H:%i' ), DATE_FORMAT( issue_temp.COMP_DATE_TIME, '%H:%i' )),
@@ -385,7 +393,16 @@ tab11.issue_area_correspond_tab_11_cf_914_code = issue_temp.TMP_COST_DETAILS_COD
 tab11.issue_area_correspond_tab_11_cf_914_name = issue_temp.TMP_COST_DETAILS_NAME,
 tab11.issue_area_correspond_tab_11_cf_915 = issue_temp.TMP_COST,
 tab11.issue_area_correspond_tab_11_cf_862_code = issue_temp.DELAY_REASON_CODE,
-tab11.issue_area_correspond_tab_11_cf_862_name = issue_temp.DELAY_REASON_NAME 
+tab11.issue_area_correspond_tab_11_cf_862_name = issue_temp.DELAY_REASON_NAME,
+
+tab11.issue_area_correspond_tab_11_cf_1305_date = DATE_FORMAT( issue_temp.REOPEN_DATETIME, '%Y-%m-%d' ),
+tab11.issue_area_correspond_tab_11_cf_1305_time = DATE_FORMAT( issue_temp.REOPEN_DATETIME, '%H:%i' ),
+tab11.issue_area_correspond_tab_11_cf_1305_datetime = DATE_FORMAT( issue_temp.REOPEN_DATETIME, '%Y-%m-%d %H:%i:%s' ),
+tab11.issue_area_correspond_tab_11_cf_1305_dept_code = issue_temp.REOPEN_DEPT_CODE,
+tab11.issue_area_correspond_tab_11_cf_1305_dept_name = issue_temp.REOPEN_DEPT_NAME,
+tab11.issue_area_correspond_tab_11_cf_1305_person_code = issue_temp.REOPEN_USER_CODE,
+tab11.issue_area_correspond_tab_11_cf_1305_person_name = issue_temp.REOPEN_USER_NAME
+ 
 WHERE
 	tab11.issue_code IS NOT NULL;
 	
@@ -432,7 +449,15 @@ issue_area_correspond_tab_11_cf_914_code,
 issue_area_correspond_tab_11_cf_914_name,
 issue_area_correspond_tab_11_cf_915,
 issue_area_correspond_tab_11_cf_862_code,
-issue_area_correspond_tab_11_cf_862_name
+issue_area_correspond_tab_11_cf_862_name,
+
+issue_area_correspond_tab_11_cf_1305_date,
+issue_area_correspond_tab_11_cf_1305_time,
+issue_area_correspond_tab_11_cf_1305_datetime,
+issue_area_correspond_tab_11_cf_1305_dept_code,
+issue_area_correspond_tab_11_cf_1305_dept_name,
+issue_area_correspond_tab_11_cf_1305_person_code,
+issue_area_correspond_tab_11_cf_1305_person_name
 ) SELECT
 issue_temp.CASE_ID,
 issue_temp.APRV_DEPT_CODE,
@@ -475,7 +500,15 @@ issue_temp.TMP_COST_DETAILS_CODE,
 issue_temp.TMP_COST_DETAILS_NAME,
 issue_temp.TMP_COST,
 issue_temp.DELAY_REASON_CODE,
-issue_temp.DELAY_REASON_NAME 
+issue_temp.DELAY_REASON_NAME,
+
+DATE_FORMAT( issue_temp.REOPEN_DATETIME, '%Y-%m-%d' ),
+DATE_FORMAT( issue_temp.REOPEN_DATETIME, '%H:%i' ),
+DATE_FORMAT( issue_temp.REOPEN_DATETIME, '%Y-%m-%d %H:%i:%s' ),
+issue_temp.REOPEN_DEPT_CODE,
+issue_temp.REOPEN_DEPT_NAME,
+issue_temp.REOPEN_USER_CODE,
+issue_temp.REOPEN_USER_NAME
 FROM
 	crm_temp_issue_info AS issue_temp
 	LEFT JOIN crm_issue_area_correspond_tab_11 AS tab11 ON issue_temp.CASE_ID = tab11.issue_code 
@@ -494,13 +527,13 @@ tab8.issue_area_correspond_tab_8_cf_710_dept_code = issue_temp.FIRST_REPORT_DEPT
 tab8.issue_area_correspond_tab_8_cf_710_dept_name = issue_temp.FIRST_REPORT_DEPT_NAME,
 tab8.issue_area_correspond_tab_8_cf_710_person_code = issue_temp.FIRST_REPORT_USER_CODE,
 tab8.issue_area_correspond_tab_8_cf_710_person_name = issue_temp.FIRST_REPORT_USER_NAME,
-tab8.issue_area_correspond_tab_8_cf_820_date = DATE_FORMAT( issue_temp.REOPEN_DATETIME, '%Y-%m-%d' ),
-tab8.issue_area_correspond_tab_8_cf_820_time = DATE_FORMAT( issue_temp.REOPEN_DATETIME, '%H:%i' ),
-tab8.issue_area_correspond_tab_8_cf_820_datetime = DATE_FORMAT( issue_temp.REOPEN_DATETIME, '%Y-%m-%d %H:%i:%s' ),
-tab8.issue_area_correspond_tab_8_cf_820_dept_code = issue_temp.REOPEN_DEPT_CODE,
-tab8.issue_area_correspond_tab_8_cf_820_dept_name = issue_temp.REOPEN_DEPT_NAME,
-tab8.issue_area_correspond_tab_8_cf_820_person_code = issue_temp.REOPEN_USER_CODE,
-tab8.issue_area_correspond_tab_8_cf_820_person_name = issue_temp.REOPEN_USER_NAME,
+-- tab8.issue_area_correspond_tab_8_cf_820_date = DATE_FORMAT( issue_temp.REOPEN_DATETIME, '%Y-%m-%d' ),
+-- tab8.issue_area_correspond_tab_8_cf_820_time = DATE_FORMAT( issue_temp.REOPEN_DATETIME, '%H:%i' ),
+-- tab8.issue_area_correspond_tab_8_cf_820_datetime = DATE_FORMAT( issue_temp.REOPEN_DATETIME, '%Y-%m-%d %H:%i:%s' ),
+-- tab8.issue_area_correspond_tab_8_cf_820_dept_code = issue_temp.REOPEN_DEPT_CODE,
+-- tab8.issue_area_correspond_tab_8_cf_820_dept_name = issue_temp.REOPEN_DEPT_NAME,
+-- tab8.issue_area_correspond_tab_8_cf_820_person_code = issue_temp.REOPEN_USER_CODE,
+-- tab8.issue_area_correspond_tab_8_cf_820_person_name = issue_temp.REOPEN_USER_NAME,
 tab8.issue_area_correspond_tab_8_cf_213_name = IF ( (issue_temp.ALARM_STOP_FLG = '' OR issue_temp.ALARM_STOP_FLG IS NULL), '必要',  IF ( issue_temp.ALARM_STOP_FLG = 1, '不要', issue_temp.ALARM_STOP_FLG ) ),
 tab8.issue_area_correspond_tab_8_cf_213_code = IF ( (issue_temp.ALARM_STOP_FLG = '' OR issue_temp.ALARM_STOP_FLG IS NULL), '1',  IF ( issue_temp.ALARM_STOP_FLG = 1, 2, issue_temp.ALARM_STOP_FLG ) )
 WHERE
@@ -516,13 +549,13 @@ INSERT INTO crm_issue_area_correspond_tab_8 (
 	issue_area_correspond_tab_8_cf_710_dept_name,
 	issue_area_correspond_tab_8_cf_710_person_code,
 	issue_area_correspond_tab_8_cf_710_person_name,
-	issue_area_correspond_tab_8_cf_820_date,
-	issue_area_correspond_tab_8_cf_820_time,
-	issue_area_correspond_tab_8_cf_820_datetime,
-	issue_area_correspond_tab_8_cf_820_dept_code,
-	issue_area_correspond_tab_8_cf_820_dept_name,
-	issue_area_correspond_tab_8_cf_820_person_code,
-	issue_area_correspond_tab_8_cf_820_person_name,
+	-- issue_area_correspond_tab_8_cf_820_date,
+	-- issue_area_correspond_tab_8_cf_820_time,
+	-- issue_area_correspond_tab_8_cf_820_datetime,
+	-- issue_area_correspond_tab_8_cf_820_dept_code,
+	-- issue_area_correspond_tab_8_cf_820_dept_name,
+	-- issue_area_correspond_tab_8_cf_820_person_code,
+	-- issue_area_correspond_tab_8_cf_820_person_name,
 	issue_area_correspond_tab_8_cf_213_name,
 	issue_area_correspond_tab_8_cf_213_code
 ) SELECT
@@ -534,13 +567,13 @@ issue_temp.FIRST_REPORT_DEPT_CODE,
 issue_temp.FIRST_REPORT_DEPT_NAME,
 issue_temp.FIRST_REPORT_USER_CODE,
 issue_temp.FIRST_REPORT_USER_NAME,
-DATE_FORMAT( issue_temp.REOPEN_DATETIME, '%Y-%m-%d' ),
-DATE_FORMAT( issue_temp.REOPEN_DATETIME, '%H:%i' ),
-DATE_FORMAT( issue_temp.REOPEN_DATETIME, '%Y-%m-%d %H:%i:%s' ),
-issue_temp.REOPEN_DEPT_CODE,
-issue_temp.REOPEN_DEPT_NAME,
-issue_temp.REOPEN_USER_CODE,
-issue_temp.REOPEN_USER_NAME,
+-- DATE_FORMAT( issue_temp.REOPEN_DATETIME, '%Y-%m-%d' ),
+-- DATE_FORMAT( issue_temp.REOPEN_DATETIME, '%H:%i' ),
+-- DATE_FORMAT( issue_temp.REOPEN_DATETIME, '%Y-%m-%d %H:%i:%s' ),
+-- issue_temp.REOPEN_DEPT_CODE,
+-- issue_temp.REOPEN_DEPT_NAME,
+-- issue_temp.REOPEN_USER_CODE,
+-- issue_temp.REOPEN_USER_NAME,
 IF ( (issue_temp.ALARM_STOP_FLG = '' OR issue_temp.ALARM_STOP_FLG IS NULL), '必要',  IF ( issue_temp.ALARM_STOP_FLG = 1, '不要', issue_temp.ALARM_STOP_FLG ) ) as issue_area_correspond_tab_8_cf_213_name,
 IF ( (issue_temp.ALARM_STOP_FLG = '' OR issue_temp.ALARM_STOP_FLG IS NULL), '1',  IF ( issue_temp.ALARM_STOP_FLG = 1, 2, issue_temp.ALARM_STOP_FLG ) ) as issue_area_correspond_tab_8_cf_213_code
 FROM
@@ -554,31 +587,23 @@ WHERE
 UPDATE crm_issue_area_correspond_tab_1 AS tab1
 INNER JOIN crm_temp_issue_info AS issue_temp ON tab1.issue_code = issue_temp.CASE_ID 
 SET tab1.issue_area_correspond_tab_1_cf_89_multil_lv3_code = issue_temp.INQ_CLASS_CODE_3,
-tab1.issue_area_correspond_tab_1_cf_89_multil_lv1_name = issue_temp.INQ_CLASS_NAME_1,
-tab1.issue_area_correspond_tab_1_cf_89_multil_lv1_code = issue_temp.INQ_CLASS_CODE_1,
-tab1.issue_area_correspond_tab_1_cf_89_multil_lv2_name = issue_temp.INQ_CLASS_NAME_2,
-tab1.issue_area_correspond_tab_1_cf_89_multil_lv2_code = issue_temp.INQ_CLASS_CODE_2,
-tab1.issue_area_correspond_tab_1_cf_89_multil_lv3_name = issue_temp.INQ_CLASS_NAME_3,
-tab1.issue_area_correspond_tab_1_cf_227_code = issue_temp.INQ_KIND,
-tab1.issue_area_correspond_tab_1_cf_227_name = issue_temp.INQ_KIND_NAME,
-tab1.issue_area_correspond_tab_1_cf_1189_code =
-IF
-	( IFNULL( issue_temp.RANK, '' ) = 1, '1／2／3', NULL ),
-	tab1.issue_area_correspond_tab_1_cf_1189_name =
-IF
-	( IFNULL( issue_temp.RANK, '' ) = 1, '硬質異物／未開栓異物／身体異常', NULL ),
-	tab1.issue_area_correspond_tab_1_cf_1190_code =
-IF
-	( IFNULL( issue_temp.RANK, '' ) = 2, '1', NULL ),
-	tab1.issue_area_correspond_tab_1_cf_1190_name =
-IF
-	( IFNULL( issue_temp.RANK, '' ) = 2, '特A', NULL ),
+	tab1.issue_area_correspond_tab_1_cf_89_multil_lv1_name = issue_temp.INQ_CLASS_NAME_1,
+	tab1.issue_area_correspond_tab_1_cf_89_multil_lv1_code = issue_temp.INQ_CLASS_CODE_1,
+	tab1.issue_area_correspond_tab_1_cf_89_multil_lv2_name = issue_temp.INQ_CLASS_NAME_2,
+	tab1.issue_area_correspond_tab_1_cf_89_multil_lv2_code = issue_temp.INQ_CLASS_CODE_2,
+	tab1.issue_area_correspond_tab_1_cf_89_multil_lv3_name = issue_temp.INQ_CLASS_NAME_3,
+	tab1.issue_area_correspond_tab_1_cf_227_code = issue_temp.INQ_KIND,
+	tab1.issue_area_correspond_tab_1_cf_227_name = issue_temp.INQ_KIND_NAME,
+	tab1.issue_area_correspond_tab_1_cf_1189_code = IF( IFNULL( issue_temp.RANK, '' ) = 1, '5', '' ),
+	tab1.issue_area_correspond_tab_1_cf_1189_name = IF( IFNULL( issue_temp.RANK, '' ) = 1, 'A客推本判定', '' ),
+	tab1.issue_area_correspond_tab_1_cf_1190_code = IF( IFNULL( issue_temp.RANK, '' ) = 2, '1', '' ),
+	tab1.issue_area_correspond_tab_1_cf_1190_name = IF( IFNULL( issue_temp.RANK, '' ) = 2, '特A', '' ),
 	tab1.issue_area_correspond_tab_1_cf_90_code = issue_temp.FEELINGS_CODE,
 	tab1.issue_area_correspond_tab_1_cf_90_name = issue_temp.FEELINGS_NAME,
 	tab1.issue_area_correspond_tab_1_cf_91_code = issue_temp.PL_CODE,
 	tab1.issue_area_correspond_tab_1_cf_91_name = issue_temp.PL_NAME,
-	tab1.issue_area_correspond_tab_1_cf_95_code = NULL,
-	tab1.issue_area_correspond_tab_1_cf_95_name = NULL,
+	tab1.issue_area_correspond_tab_1_cf_95_code = '',
+	tab1.issue_area_correspond_tab_1_cf_95_name = '',
 	tab1.issue_area_correspond_tab_1_cf_96 = issue_temp.CRSP_COMMENT,
 	tab1.issue_area_correspond_tab_1_cf_96_search = search_field ( issue_temp.CRSP_COMMENT ),
 	tab1.issue_area_correspond_tab_1_cf_880_code = issue_temp.KEYWORD_CODE,
@@ -612,29 +637,25 @@ INSERT INTO crm_issue_area_correspond_tab_1 (
 	issue_area_correspond_tab_1_cf_880_code,
 	issue_area_correspond_tab_1_cf_880_name
 ) SELECT
-issue_temp.CASE_ID,
-issue_temp.INQ_CLASS_CODE_3,
-issue_temp.INQ_CLASS_NAME_1,
-issue_temp.INQ_CLASS_CODE_1,
-issue_temp.INQ_CLASS_NAME_2,
-issue_temp.INQ_CLASS_CODE_2,
-issue_temp.INQ_CLASS_NAME_3,
-issue_temp.INQ_KIND,
-issue_temp.INQ_KIND_NAME,
-IF
-	( IFNULL( issue_temp.RANK, '' ) = 1, '1／2／3', NULL ),
-IF
-	( IFNULL( issue_temp.RANK, '' ) = 1, '硬質異物／未開栓異物／身体異常', NULL ),
-IF
-	( IFNULL( issue_temp.RANK, '' ) = 2, '1', NULL ),
-IF
-	( IFNULL( issue_temp.RANK, '' ) = 2, '特A', NULL ),
+	issue_temp.CASE_ID,
+	issue_temp.INQ_CLASS_CODE_3,
+	issue_temp.INQ_CLASS_NAME_1,
+	issue_temp.INQ_CLASS_CODE_1,
+	issue_temp.INQ_CLASS_NAME_2,
+	issue_temp.INQ_CLASS_CODE_2,
+	issue_temp.INQ_CLASS_NAME_3,
+	issue_temp.INQ_KIND,
+	issue_temp.INQ_KIND_NAME,
+	IF( IFNULL( issue_temp.RANK, '' ) = 1, '5', '' ),
+	IF( IFNULL( issue_temp.RANK, '' ) = 1, 'A客推本判定', '' ),
+	IF( IFNULL( issue_temp.RANK, '' ) = 2, '1', '' ),
+	IF( IFNULL( issue_temp.RANK, '' ) = 2, '特A', '' ),
 	issue_temp.FEELINGS_CODE,
 	issue_temp.FEELINGS_NAME,
 	issue_temp.PL_CODE,
 	issue_temp.PL_NAME,
-	NULL AS issue_area_correspond_tab_1_cf_95_code,
-	NULL AS issue_area_correspond_tab_1_cf_95_name,
+	'' AS issue_area_correspond_tab_1_cf_95_code,
+	'' AS issue_area_correspond_tab_1_cf_95_name,
 	issue_temp.CRSP_COMMENT,
 	search_field ( issue_temp.CRSP_COMMENT ),
 	issue_temp.KEYWORD_CODE,	
@@ -841,24 +862,37 @@ INNER JOIN crm_temp_issue_info AS issue_temp ON ( cust.issue_cust_issue_code = i
 SET cust.issue_cust_cf_990 = issue_temp.CUST_NAME_1,
 cust.issue_cust_cf_991 = issue_temp.CUST_NAME_KANA_1,
 cust.issue_cust_cf_106 = issue_temp.CUST_COMPANY_NAME_1,
-cust.issue_cust_cf_884 = issue_temp.CUST_COMPANY_NAME_KANA_1,
+ cust.issue_cust_cf_884 = issue_temp.CUS_CORP_NAME_KANA_1,
 cust.issue_cust_cooperation_code = issue_temp.CUST_CLASS_CODE_1,
 cust.issue_cust_cooperation_name = issue_temp.CUST_CLASS_NAME_1,
 cust.issue_cust_gender_code = issue_temp.CUST_SEX_CODE_1,
 cust.issue_cust_gender_name = issue_temp.CUST_SEX_NAME_1,
 cust.issue_cust_age_code = issue_temp.CUST_GENERATION_CODE_1,
 cust.issue_cust_age_name = issue_temp.CUST_GENERATION_NAME_1,
-cust.issue_cust_cf_110_code = issue_temp.CUST_TEL_CLASS_CODE_1,
-cust.issue_cust_cf_110_name = issue_temp.CUST_TEL_CLASS_NAME_1,
-cust.issue_cust_tel2 = issue_temp.CUST_TEL_1,
-cust.issue_cust_cf_986 = issue_temp.CUST_FAX_1,
+ cust.issue_cust_class_tel1_code = issue_temp.CUST_TEL_CLASS_CODE_1,
+ cust.issue_cust_class_tel1_name = issue_temp.CUST_TEL_CLASS_NAME_1,
+ cust.issue_cust_tel1 = issue_temp.CUST_TEL_1,
+ cust.issue_cust_cf_986 = issue_temp.CUS_FAX_1,
 cust.issue_cust_prefecture_code = issue_temp.CUST_FUKEN_CODE_1,
 cust.issue_cust_prefecture_name = issue_temp.CUST_FUKEN_NAME_1,
-cust.issue_cust_mail1 = issue_temp.CUST_MAIL_ADDR_1,
-cust.issue_cust_tel1 = issue_temp.RECEIVE_TEL,
+ cust.issue_cust_mail1 = issue_temp.CUS_MAIL_1,
+-- cust.issue_cust_tel1 = issue_temp.RECEIVE_TEL,
 cust.issue_cust_cf_111_code = issue_temp.CUST_LANGUAGE_CODE,
-issue_cust_cf_111_name = issue_temp.CUST_LANGUAGE_NAME,
-issue_cust_cf_112 = issue_temp.CUST_COUNTRY 
+cust.issue_cust_cf_111_name = issue_temp.CUST_LANGUAGE_NAME,
+cust.issue_cust_cf_112 = issue_temp.CUST_COUNTRY,
+cust.issue_cust_cf_904 = issue_temp.CUS_DISTIN_NAME_1,
+cust.issue_cust_zipcode = issue_temp.CUS_ZIPCODE_1,
+cust.issue_cust_address1 = issue_temp.CUS_HOME_ADDR_1_1,
+cust.issue_cust_address2 = issue_temp.CUS_HOME_ADDR_2_1,
+cust.issue_cust_cf_988 = issue_temp.CUS_AFTER_ADDR_1,
+cust.issue_cust_cf_107 = issue_temp.CUS_OTHER_ADDR_1,
+cust.issue_cust_cf_987 = issue_temp.CUS_OTHER_FAX_1,
+cust.issue_cust_cf_1272 = issue_temp.CUS_NOTE_1,
+cust.issue_cust_cf_1272_search = search_field(issue_temp.CUS_NOTE_1),
+cust.issue_cust_special_code = issue_temp.CUS_SHARE_CLASSIFICATION_CODE_1,
+cust.issue_cust_special_name = issue_temp.CUS_SHARE_CLASSIFICATION_NAME_1,
+cust.issue_cust_cf_108_code = IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_1, '') = 1, 1, IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_1, '') = 2, 2, IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_1, '') = 0, 4, ''))),
+cust.issue_cust_cf_108_name = IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_1, '') = 1, '◎：基本ここにかける', IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_1, '') = 2, '○：掛けても良い', IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_1, '') = 0, '×：架けてはいけない', '')))
 WHERE
 	cust.issue_cust_issue_code IS NOT NULL;
 	
@@ -868,49 +902,75 @@ INSERT INTO crm_issue_cust (
 	issue_cust_cf_990,
 	issue_cust_cf_991,
 	issue_cust_cf_106,
-	issue_cust_cf_884,
+	 issue_cust_cf_884,
 	issue_cust_cooperation_code,
 	issue_cust_cooperation_name,
 	issue_cust_gender_code,
 	issue_cust_gender_name,
 	issue_cust_age_code,
 	issue_cust_age_name,
-	issue_cust_cf_110_code,
-	issue_cust_cf_110_name,
-	issue_cust_tel2,
-	issue_cust_cf_986,
+	 issue_cust_class_tel1_code,
+	 issue_cust_class_tel1_name,
+	 issue_cust_tel1,
+	 issue_cust_cf_986,
 	issue_cust_prefecture_code,
 	issue_cust_prefecture_name,
-	issue_cust_mail1,
-	issue_cust_tel1,
+	 issue_cust_mail1,
+	-- issue_cust_tel1,
 	issue_cust_cf_111_code,
 	issue_cust_cf_111_name,
 	issue_cust_cf_112,
+	issue_cust_cf_904,
+	issue_cust_zipcode,
+	issue_cust_address1,
+	issue_cust_address2,
+	issue_cust_cf_988,
+	issue_cust_cf_107,
+	issue_cust_cf_987,
+	issue_cust_cf_1272,
+	issue_cust_cf_1272_search,
+	issue_cust_special_code,
+	issue_cust_special_name,
+	issue_cust_cf_108_code,
+	issue_cust_cf_108_name,
 	issue_cust_no_order 
 ) SELECT
 issue_temp.CASE_ID,
 issue_temp.CUST_NAME_1,
 issue_temp.CUST_NAME_KANA_1,
 issue_temp.CUST_COMPANY_NAME_1,
-issue_temp.CUST_COMPANY_NAME_KANA_1,
+ issue_temp.CUS_CORP_NAME_KANA_1,
 issue_temp.CUST_CLASS_CODE_1,
 issue_temp.CUST_CLASS_NAME_1,
 issue_temp.CUST_SEX_CODE_1,
 issue_temp.CUST_SEX_NAME_1,
 issue_temp.CUST_GENERATION_CODE_1,
 issue_temp.CUST_GENERATION_NAME_1,
-issue_temp.CUST_TEL_CLASS_CODE_1,
-issue_temp.CUST_TEL_CLASS_NAME_1,
-issue_temp.CUST_TEL_1,
-issue_temp.CUST_FAX_1,
+ issue_temp.CUST_TEL_CLASS_CODE_1,
+ issue_temp.CUST_TEL_CLASS_NAME_1,
+ issue_temp.CUST_TEL_1,
+ issue_temp.CUS_FAX_1,
 issue_temp.CUST_FUKEN_CODE_1,
 issue_temp.CUST_FUKEN_NAME_1,
-issue_temp.CUST_MAIL_ADDR_1,
-issue_temp.RECEIVE_TEL,
+ issue_temp.CUS_MAIL_1,
+-- issue_temp.RECEIVE_TEL,
 issue_temp.CUST_LANGUAGE_CODE,
 issue_temp.CUST_LANGUAGE_NAME,
 issue_temp.CUST_COUNTRY,
-1 
+issue_temp.CUS_DISTIN_NAME_1,
+issue_temp.CUS_ZIPCODE_1,
+issue_temp.CUS_HOME_ADDR_1_1,
+issue_temp.CUS_HOME_ADDR_2_1,
+issue_temp.CUS_AFTER_ADDR_1,
+issue_temp.CUS_OTHER_ADDR_1,
+issue_temp.CUS_OTHER_FAX_1,
+issue_temp.CUS_NOTE_1,
+search_field(issue_temp.CUS_NOTE_1),
+issue_temp.CUS_SHARE_CLASSIFICATION_CODE_1,
+issue_temp.CUS_SHARE_CLASSIFICATION_NAME_1,
+IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_1, '') = 1, 1, IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_1, '') = 2, 2, IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_1, '') = 0, 4, ''))),
+IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_1, '') = 1, '◎：基本ここにかける', IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_1, '') = 2, '○：掛けても良い', IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_1, '') = 0, '×：架けてはいけない', ''))),
+1 as issue_cust_no_order
 FROM
 	crm_temp_issue_info AS issue_temp
 	LEFT JOIN crm_issue_cust AS cust ON issue_temp.CASE_ID = cust.issue_cust_issue_code 
@@ -926,20 +986,33 @@ SET
 cust.issue_cust_cf_990 = issue_temp.CUST_NAME_2,
 cust.issue_cust_cf_991 = issue_temp.CUST_NAME_KANA_2,
 cust.issue_cust_cf_106 = issue_temp.CUST_COMPANY_NAME_2,
-cust.issue_cust_cf_884 = issue_temp.CUST_COMPANY_NAME_KANA_2,
+ cust.issue_cust_cf_884 = issue_temp.CUS_CORP_NAME_KANA_2,
 cust.issue_cust_cooperation_code = issue_temp.CUST_CLASS_CODE_2,
 cust.issue_cust_cooperation_name = issue_temp.CUST_CLASS_NAME_2,
 cust.issue_cust_gender_code = issue_temp.CUST_SEX_CODE_2,
 cust.issue_cust_gender_name = issue_temp.CUST_SEX_NAME_2,
 cust.issue_cust_age_code = issue_temp.CUST_GENERATION_CODE_2,
 cust.issue_cust_age_name = issue_temp.CUST_GENERATION_NAME_2,
-cust.issue_cust_cf_110_code = issue_temp.CUST_TEL_CLASS_CODE_2,
-cust.issue_cust_cf_110_name = issue_temp.CUST_TEL_CLASS_NAME_2,
-cust.issue_cust_tel2 = issue_temp.CUST_TEL_2,
-cust.issue_cust_cf_986 = issue_temp.CUST_FAX_2,
+ cust.issue_cust_class_tel1_code = issue_temp.CUST_TEL_CLASS_CODE_2,
+ cust.issue_cust_class_tel1_name = issue_temp.CUST_TEL_CLASS_NAME_2,
+ cust.issue_cust_tel1 = issue_temp.CUST_TEL_2,
+ cust.issue_cust_cf_986 = issue_temp.CUS_FAX_2,
 cust.issue_cust_prefecture_code = issue_temp.CUST_FUKEN_CODE_2,
 cust.issue_cust_prefecture_name = issue_temp.CUST_FUKEN_NAME_2,
-cust.issue_cust_mail1 = issue_temp.CUST_MAIL_ADDR_2
+cust.issue_cust_cf_904 = issue_temp.CUS_DISTIN_NAME_2,
+cust.issue_cust_zipcode = issue_temp.CUS_ZIPCODE_2,
+cust.issue_cust_address1 = issue_temp.CUS_HOME_ADDR_1_2,
+cust.issue_cust_address2 = issue_temp.CUS_HOME_ADDR_2_2,
+cust.issue_cust_cf_988 = issue_temp.CUS_AFTER_ADDR_2,
+cust.issue_cust_cf_107 = issue_temp.CUS_OTHER_ADDR_2,
+cust.issue_cust_cf_987 = issue_temp.CUS_OTHER_FAX_2,
+ cust.issue_cust_mail1 = issue_temp.CUS_MAIL_2,
+cust.issue_cust_cf_1272 = issue_temp.CUS_NOTE_2,
+cust.issue_cust_cf_1272_search = search_field(issue_temp.CUS_NOTE_2),
+cust.issue_cust_special_code = issue_temp.CUS_SHARE_CLASSIFICATION_CODE_2,
+cust.issue_cust_special_name = issue_temp.CUS_SHARE_CLASSIFICATION_NAME_2,
+cust.issue_cust_cf_108_code = IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_2, '') = 1, 1, IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_2, '') = 2, 2, IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_2, '') = 0, 4, ''))),
+cust.issue_cust_cf_108_name = IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_2, '') = 1, '◎：基本ここにかける', IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_2, '') = 2, '○：掛けても良い', IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_2, '') = 0, '×：架けてはいけない', '')))
 WHERE
 	cust.issue_cust_issue_code IS NOT NULL;
 	
@@ -949,41 +1022,67 @@ INSERT INTO crm_issue_cust (
 	issue_cust_cf_990,
 	issue_cust_cf_991,
 	issue_cust_cf_106,
-	issue_cust_cf_884,
+	 issue_cust_cf_884,
 	issue_cust_cooperation_code,
 	issue_cust_cooperation_name,
 	issue_cust_gender_code,
 	issue_cust_gender_name,
 	issue_cust_age_code,
 	issue_cust_age_name,
-	issue_cust_cf_110_code,
-	issue_cust_cf_110_name,
-	issue_cust_tel2,
-	issue_cust_cf_986,
+	 issue_cust_class_tel1_code,
+	 issue_cust_class_tel1_name,
+	 issue_cust_tel1,
+	 issue_cust_cf_986,
 	issue_cust_prefecture_code,
 	issue_cust_prefecture_name,
-	issue_cust_mail1,
+	 issue_cust_mail1,
+	issue_cust_cf_904,
+	issue_cust_zipcode,
+	issue_cust_address1,
+	issue_cust_address2,
+	issue_cust_cf_988,
+	issue_cust_cf_107,
+	issue_cust_cf_987,
+	issue_cust_cf_1272,
+	issue_cust_cf_1272_search,
+	issue_cust_special_code,
+	issue_cust_special_name,
+	issue_cust_cf_108_code,
+	issue_cust_cf_108_name,
 	issue_cust_no_order	
 ) SELECT
 issue_temp.CASE_ID,
 issue_temp.CUST_NAME_2,
 issue_temp.CUST_NAME_KANA_2,
 issue_temp.CUST_COMPANY_NAME_2,
-issue_temp.CUST_COMPANY_NAME_KANA_2,
+ issue_temp.CUS_CORP_NAME_KANA_2,
 issue_temp.CUST_CLASS_CODE_2,
 issue_temp.CUST_CLASS_NAME_2,
 issue_temp.CUST_SEX_CODE_2,
 issue_temp.CUST_SEX_NAME_2,
 issue_temp.CUST_GENERATION_CODE_2,
 issue_temp.CUST_GENERATION_NAME_2,
-issue_temp.CUST_TEL_CLASS_CODE_2,
-issue_temp.CUST_TEL_CLASS_NAME_2,
-issue_temp.CUST_TEL_2,
-issue_temp.CUST_FAX_2,
+ issue_temp.CUST_TEL_CLASS_CODE_2,
+ issue_temp.CUST_TEL_CLASS_NAME_2,
+ issue_temp.CUST_TEL_2,
+ issue_temp.CUS_FAX_2,
 issue_temp.CUST_FUKEN_CODE_2,
 issue_temp.CUST_FUKEN_NAME_2,
-issue_temp.CUST_MAIL_ADDR_2,
-2
+ issue_temp.CUS_MAIL_2,
+issue_temp.CUS_DISTIN_NAME_2,
+issue_temp.CUS_ZIPCODE_2,
+issue_temp.CUS_HOME_ADDR_1_2,
+issue_temp.CUS_HOME_ADDR_2_2,
+issue_temp.CUS_AFTER_ADDR_2,
+issue_temp.CUS_OTHER_ADDR_2,
+issue_temp.CUS_OTHER_FAX_2,
+issue_temp.CUS_NOTE_2,
+search_field(issue_temp.CUS_NOTE_2),
+issue_temp.CUS_SHARE_CLASSIFICATION_CODE_2,
+issue_temp.CUS_SHARE_CLASSIFICATION_NAME_2,
+IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_2, '') = 1, 1, IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_2, '') = 2, 2, IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_2, '') = 0, 4, ''))),
+IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_2, '') = 1, '◎：基本ここにかける', IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_2, '') = 2, '○：掛けても良い', IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_2, '') = 0, '×：架けてはいけない', ''))),
+2 as issue_cust_no_order
 FROM
 	crm_temp_issue_info AS issue_temp
 	LEFT JOIN crm_issue_cust AS cust ON issue_temp.CASE_ID = cust.issue_cust_issue_code AND cust.issue_cust_no_order = 2
@@ -998,20 +1097,33 @@ SET
 cust.issue_cust_cf_990 = issue_temp.CUST_NAME_3,
 cust.issue_cust_cf_991 = issue_temp.CUST_NAME_KANA_3,
 cust.issue_cust_cf_106 = issue_temp.CUST_COMPANY_NAME_3,
-cust.issue_cust_cf_884 = issue_temp.CUST_COMPANY_NAME_KANA_3,
+ cust.issue_cust_cf_884 = issue_temp.CUS_CORP_NAME_KANA_3,
 cust.issue_cust_cooperation_code = issue_temp.CUST_CLASS_CODE_3,
 cust.issue_cust_cooperation_name = issue_temp.CUST_CLASS_NAME_3,
 cust.issue_cust_gender_code = issue_temp.CUST_SEX_CODE_3,
 cust.issue_cust_gender_name = issue_temp.CUST_SEX_NAME_3,
 cust.issue_cust_age_code = issue_temp.CUST_GENERATION_CODE_3,
 cust.issue_cust_age_name = issue_temp.CUST_GENERATION_NAME_3,
-cust.issue_cust_cf_110_code = issue_temp.CUST_TEL_CLASS_CODE_3,
-cust.issue_cust_cf_110_name = issue_temp.CUST_TEL_CLASS_NAME_3,
-cust.issue_cust_tel2 = issue_temp.CUST_TEL_3,
-cust.issue_cust_cf_986 = issue_temp.CUST_FAX_3,
+ cust.issue_cust_class_tel1_code = issue_temp.CUST_TEL_CLASS_CODE_3,
+ cust.issue_cust_class_tel1_name = issue_temp.CUST_TEL_CLASS_NAME_3,
+ cust.issue_cust_tel1 = issue_temp.CUST_TEL_3,
+ cust.issue_cust_cf_986 = issue_temp.CUS_FAX_3,
 cust.issue_cust_prefecture_code = issue_temp.CUST_FUKEN_CODE_3,
 cust.issue_cust_prefecture_name = issue_temp.CUST_FUKEN_NAME_3,
-cust.issue_cust_mail1 = issue_temp.CUST_MAIL_ADDR_3
+cust.issue_cust_cf_904 = issue_temp.CUS_DISTIN_NAME_3,
+cust.issue_cust_zipcode = issue_temp.CUS_ZIPCODE_3,
+cust.issue_cust_address1 = issue_temp.CUS_HOME_ADDR_1_3,
+cust.issue_cust_address2 = issue_temp.CUS_HOME_ADDR_2_3,
+cust.issue_cust_cf_988 = issue_temp.CUS_AFTER_ADDR_3,
+cust.issue_cust_cf_107 = issue_temp.CUS_OTHER_ADDR_3,
+cust.issue_cust_cf_987 = issue_temp.CUS_OTHER_FAX_3,
+ cust.issue_cust_mail1 = issue_temp.CUS_MAIL_3,
+cust.issue_cust_cf_1272 = issue_temp.CUS_NOTE_3,
+cust.issue_cust_cf_1272_search = search_field(issue_temp.CUS_NOTE_3),
+cust.issue_cust_special_code = issue_temp.CUS_SHARE_CLASSIFICATION_CODE_3,
+cust.issue_cust_special_name = issue_temp.CUS_SHARE_CLASSIFICATION_NAME_3,
+cust.issue_cust_cf_108_code = IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_3, '') = 1, 1, IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_3, '') = 2, 2, IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_3, '') = 0, 4, ''))),
+cust.issue_cust_cf_108_name = IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_3, '') = 1, '◎：基本ここにかける', IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_3, '') = 2, '○：掛けても良い', IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_3, '') = 0, '×：架けてはいけない', '')))
 WHERE
 	cust.issue_cust_issue_code IS NOT NULL;
 	
@@ -1021,41 +1133,67 @@ INSERT INTO crm_issue_cust (
 	issue_cust_cf_990,
 	issue_cust_cf_991,
 	issue_cust_cf_106,
-	issue_cust_cf_884,
+	 issue_cust_cf_884,
 	issue_cust_cooperation_code,
 	issue_cust_cooperation_name,
 	issue_cust_gender_code,
 	issue_cust_gender_name,
 	issue_cust_age_code,
 	issue_cust_age_name,
-	issue_cust_cf_110_code,
-	issue_cust_cf_110_name,
-	issue_cust_tel2,
-	issue_cust_cf_986,
+	 issue_cust_class_tel1_code,
+	 issue_cust_class_tel1_name,
+	 issue_cust_tel1,
+	 issue_cust_cf_986,
 	issue_cust_prefecture_code,
 	issue_cust_prefecture_name,
-	issue_cust_mail1,
+	 issue_cust_mail1,
+	issue_cust_cf_904,
+	issue_cust_zipcode,
+	issue_cust_address1,
+	issue_cust_address2,
+	issue_cust_cf_988,
+	issue_cust_cf_107,
+	issue_cust_cf_987,
+	issue_cust_cf_1272,
+	issue_cust_cf_1272_search,
+	issue_cust_special_code,
+	issue_cust_special_name,
+	issue_cust_cf_108_code,
+	issue_cust_cf_108_name,
 	issue_cust_no_order	
 ) SELECT
 issue_temp.CASE_ID,
 issue_temp.CUST_NAME_3,
 issue_temp.CUST_NAME_KANA_3,
 issue_temp.CUST_COMPANY_NAME_3,
-issue_temp.CUST_COMPANY_NAME_KANA_3,
+ issue_temp.CUS_CORP_NAME_KANA_3,
 issue_temp.CUST_CLASS_CODE_3,
 issue_temp.CUST_CLASS_NAME_3,
 issue_temp.CUST_SEX_CODE_3,
 issue_temp.CUST_SEX_NAME_3,
 issue_temp.CUST_GENERATION_CODE_3,
 issue_temp.CUST_GENERATION_NAME_3,
-issue_temp.CUST_TEL_CLASS_CODE_3,
-issue_temp.CUST_TEL_CLASS_NAME_3,
-issue_temp.CUST_TEL_3,
-issue_temp.CUST_FAX_3,
+ issue_temp.CUST_TEL_CLASS_CODE_3,
+ issue_temp.CUST_TEL_CLASS_NAME_3,
+ issue_temp.CUST_TEL_3,
+ issue_temp.CUS_FAX_3,
 issue_temp.CUST_FUKEN_CODE_3,
 issue_temp.CUST_FUKEN_NAME_3,
-issue_temp.CUST_MAIL_ADDR_3,
-3
+ issue_temp.CUS_MAIL_3,
+issue_temp.CUS_DISTIN_NAME_3,
+issue_temp.CUS_ZIPCODE_3,
+issue_temp.CUS_HOME_ADDR_1_3,
+issue_temp.CUS_HOME_ADDR_2_3,
+issue_temp.CUS_AFTER_ADDR_3,
+issue_temp.CUS_OTHER_ADDR_3,
+issue_temp.CUS_OTHER_FAX_3,
+issue_temp.CUS_NOTE_3,
+search_field(issue_temp.CUS_NOTE_3),
+issue_temp.CUS_SHARE_CLASSIFICATION_CODE_3,
+issue_temp.CUS_SHARE_CLASSIFICATION_NAME_3,
+IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_3, '') = 1, 1, IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_3, '') = 2, 2, IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_3, '') = 0, 4, ''))),
+IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_3, '') = 1, '◎：基本ここにかける', IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_3, '') = 2, '○：掛けても良い', IF (IFNULL(issue_temp.CUS_IS_REPLY_RECEIVE_TEL_3, '') = 0, '×：架けてはいけない', ''))),
+3 as issue_cust_no_order
 FROM
 	crm_temp_issue_info AS issue_temp
 	LEFT JOIN crm_issue_cust AS cust ON issue_temp.CASE_ID = cust.issue_cust_issue_code AND cust.issue_cust_no_order = 3
@@ -1156,67 +1294,6 @@ WHERE
 	OR tab4.issue_code = '';	
 
 
--- crm_issue_area_correspond_tab_12
-INSERT INTO crm_issue_area_correspond_tab_12 (
-	issue_code,
-	issue_area_correspond_tab_12_cf_1057,
-	issue_area_correspond_tab_12_cf_1056,
-	issue_area_correspond_tab_12_cf_1058,
-	issue_area_correspond_tab_12_cf_1059,
-	issue_area_correspond_tab_12_cf_1060,
-	issue_area_correspond_tab_12_cf_1061,
-	issue_area_correspond_tab_12_cf_1062,
-	issue_area_correspond_tab_12_cf_951_multil_lv1_code,
-	issue_area_correspond_tab_12_cf_951_multil_lv1_name,
-	issue_area_correspond_tab_12_cf_951_multil_lv2_code,
-	issue_area_correspond_tab_12_cf_951_multil_lv2_name,
-	issue_area_correspond_tab_12_cf_951_multil_lv3_code,
-	issue_area_correspond_tab_12_cf_951_multil_lv3_name,
-	issue_area_correspond_tab_12_cf_866_code,
-	issue_area_correspond_tab_12_cf_866_name,
-	issue_area_correspond_tab_12_cf_943_code,
-	issue_area_correspond_tab_12_cf_943_name,
-	issue_area_correspond_tab_12_cf_948_code,
-	issue_area_correspond_tab_12_cf_948_name,
-	issue_area_correspond_tab_12_cf_949_code,
-	issue_area_correspond_tab_12_cf_949_name,
-	issue_area_correspond_tab_12_cf_690,
-	issue_area_correspond_tab_12_cf_690_search,
-	issue_area_correspond_tab_12_cf_989
-) SELECT
-issue_temp.CASE_ID,
-issue_temp.PRODUCT_CLASS_NAME_1,
-issue_temp.PRODUCT_CLASS_NAME_2,
-issue_temp.PRODUCT_CLASS_NAME_3,
-issue_temp.PRODUCT_CLASS_NAME_4,
-issue_temp.PRODUCT_CLASS_NAME_5,
-issue_temp.PRODUCT_CODE,
-issue_temp.PRODUCT_NAME,
-issue_temp.INQ_CLASS_CODE_1,
-issue_temp.INQ_CLASS_NAME_1,
-issue_temp.INQ_CLASS_CODE_2,
-issue_temp.INQ_CLASS_NAME_2,
-issue_temp.INQ_CLASS_CODE_3,
-issue_temp.INQ_CLASS_NAME_3,
-issue_temp.INQ_KIND,
-issue_temp.INQ_KIND_NAME,
-issue_temp.OBTAIN_METHOD_CODE,
-issue_temp.OBTAIN_METHOD_NAME,
-issue_temp.FEELINGS_CODE,
-issue_temp.FEELINGS_NAME,
-issue_temp.PL_CODE,
-issue_temp.PL_NAME,
-issue_temp.CUSTOMER_VOICE,
-search_field ( issue_temp.CUSTOMER_VOICE ),
-issue_temp.CRSP_COMMENT
-FROM
-	crm_temp_issue_info AS issue_temp
-	LEFT JOIN crm_issue_area_correspond_tab_12 AS tab12 ON issue_temp.CASE_ID = tab12.issue_code 
-WHERE
-	tab12.issue_code IS NULL 
-	OR tab12.issue_code = '';	
-
-
 -- crm_issue_area_correspond_tab_13
 INSERT INTO crm_issue_area_correspond_tab_13 (
 	issue_code
@@ -1241,3 +1318,29 @@ FROM
 WHERE
 	tab5.issue_code IS NULL 
 	OR tab5.issue_code = '';
+
+
+-- crm_issue_area_correspond_tab_10
+UPDATE crm_issue_area_correspond_tab_10
+INNER JOIN crm_temp_issue_info AS issue_temp ON crm_issue_area_correspond_tab_10.issue_code = issue_temp.CASE_ID 
+SET 
+issue_area_correspond_tab_10_cf_1021 = issue_temp.YAMATO_NOTE_POINT,
+issue_area_correspond_tab_10_cf_1021_search = search_field(issue_temp.YAMATO_NOTE_POINT) 
+WHERE
+	crm_issue_area_correspond_tab_10.issue_code IS NOT NULL;
+
+
+INSERT INTO crm_issue_area_correspond_tab_10 (
+	issue_code,
+	issue_area_correspond_tab_10_cf_1021,
+	issue_area_correspond_tab_10_cf_1021_search
+)SELECT
+issue_temp.CASE_ID,
+issue_temp.YAMATO_NOTE_POINT,
+search_field(issue_temp.YAMATO_NOTE_POINT)
+FROM
+	crm_temp_issue_info AS issue_temp
+	LEFT JOIN crm_issue_area_correspond_tab_10 AS tab10 ON issue_temp.CASE_ID = tab10.issue_code 
+WHERE
+	tab10.issue_code IS NULL 
+	OR tab10.issue_code = '';

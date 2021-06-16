@@ -1,75 +1,8 @@
--- load data into temp table 
-
-LOAD DATA LOCAL INFILE 'C:/Users/hungnm/Desktop/CRMZ050TB_ALL.csv' 
-INTO TABLE crm_temp_product_info 
-CHARACTER SET cp932 
-FIELDS TERMINATED BY ',' 
-OPTIONALLY ENCLOSED BY '"' 
-LINES TERMINATED BY '\n' 
-IGNORE 1 LINES
-( @1, @2, @3, @4, @5,@6, @7, @8, @9, @10, @11, @12, @13, @14, 
-@15, @16, @17, @18, @19, @20, @21, @22, @23, @24, @25, @26, 
-@27, @28, @29, @30, @31, @32, @33, @34, @35, @36, @37, @38, 
-@39, @40, @41, @42, @43, @44, @45, @46, @47, @48, @49, @50, 
-@51, @52 ) 
-SET 
-CASE_ID = @1,
-ARTICLE_NUMBER = @2,
-GENERATION_DATE = @3,
-OBTAINING_DATE = @4,
-OBTAINING_METHOD = @5,
-OBTAINING_METHOD_NAME = @6,
-PRESERV_PLACE_CHANNEL = @7,
-PRESERV_PLACE_CHANNEL_NAME = @8,
-PRESENCE = @9,
-PRESENCE_NAME = @10,
-BOTTLES = @11,
-OPEN_SITUATION = @12,
-OPEN_SITUATION_NAME = @13, 
-OPEN_DATE = @14,
-REMAINDER = @15,
-INDIVIDUAL_LOT_1 = @16,
-INDIVIDUAL_LOT_2 = @17,
-INDIVIDUAL_LOT_3 = @18,
-INDIVIDUAL_LOT_FC_CD = @19,
-INDIVIDUAL_LOT_FACTORY = @20,
-INDIVIDUAL_LOT_LINE = @21,
-OUTER_LOT_1 = @22,
-OUTER_LOT_2 = @23,
-OUTER_LOT_3 = @24,
-OBTAINE_DESTINATION = @25,
-OBTAINE_SFNO_1 = @26,
-WRAPPING_CLASS_CD_1 = @27,
-WRAPPING_CLASS_1 = @28,
-WRAPPING_MAKER_CD_1 = @29,
-WRAPPING_MAKER_1 = @30,
-WRAPPING_LOT_1 = @31,
-WRAPPING_CLASS_CD_2 = @32,
-WRAPPING_CLASS_2 = @33,
-WRAPPING_MAKER_CD_2 = @34,
-WRAPPING_MAKER_2 = @35,
-WRAPPING_LOT_2 = @36,
-CLASSIFICATION_DEPT_CODE = @37,
-CLASSIFICATION_DEPT_NAME = @38,
-RESULT_1 = @39,
-RESULT_2 = @40,
-RESULT_3 = @41,
-RESULT_4 = @42,
-RESULT_5 = @43,
-RESULT_NAME_1 = @44,
-RESULT_NAME_2 = @45,
-RESULT_NAME_3 = @46,
-RESULT_NAME_4 = @47,
-RESULT_NAME_5 = @48,
-OBTAINE_STICKER_KIND = @49,
-OBTAINE_STICKER_KIND_NAME = @50,
-PROD_TO_FIND = @51,
-PROD_NOTE = @52
-;
-
--- update anh insert data to real table
-
 SET sql_mode='';
+
+UPDATE `crm_temp_product_info`
+SET FILE_NAME = '$file_path'
+WHERE FILE_NAME IS NULL;
 
 UPDATE crm_temp_product_info AS temp_prod
 INNER JOIN crm_temp_code_mapping AS code_mapping ON ( temp_prod.PRESERV_PLACE_CHANNEL = code_mapping.SOURCE_CLASS_VALUE AND code_mapping.SOURCE_CLASS = 'PRESERV_PLACE_CHANNEL' ) 
@@ -109,7 +42,8 @@ corr_md_1079.issue_area_correspond_md_1079_cf_1094_search = search_field(PROD_TO
 corr_md_1079.issue_area_correspond_md_1079_cf_1095 = OBTAINE_SFNO_1,
 corr_md_1079.issue_area_correspond_md_1079_cf_1096_code = OBTAINE_STICKER_KIND,
 corr_md_1079.issue_area_correspond_md_1079_cf_1096_name = OBTAINE_STICKER_KIND_NAME,
-corr_md_1079.issue_area_correspond_md_1079_cf_1104 = PROD_NOTE
+corr_md_1079.issue_area_correspond_md_1079_cf_1304 = PROD_NOTE,
+corr_md_1079.issue_area_correspond_md_1079_cf_1304_search = search_field(PROD_NOTE)
 WHERE
 	corr_md_1079.issue_code IS NOT NULL;
 
@@ -141,7 +75,8 @@ issue_area_correspond_md_1079_cf_1094_search,
 issue_area_correspond_md_1079_cf_1095,
 issue_area_correspond_md_1079_cf_1096_code,
 issue_area_correspond_md_1079_cf_1096_name,
-issue_area_correspond_md_1079_cf_1104
+issue_area_correspond_md_1079_cf_1304,
+issue_area_correspond_md_1079_cf_1304_search
 ) SELECT
 prod_temp.CASE_ID,
 prod_temp.ARTICLE_NUMBER - 1,
@@ -169,7 +104,8 @@ search_field(PROD_TO_FIND),
 OBTAINE_SFNO_1,
 OBTAINE_STICKER_KIND,
 OBTAINE_STICKER_KIND_NAME,
-PROD_NOTE
+PROD_NOTE,
+search_field(PROD_NOTE)
 FROM
 	crm_temp_product_info AS prod_temp
 	LEFT JOIN crm_issue_area_correspond_md_1079 AS corr_md_1079 ON (
@@ -181,7 +117,7 @@ WHERE
 	
 -- update crm_issue_area_correspond_md_1109
 UPDATE crm_issue_area_correspond_md_1109 AS corr_md_1109
-INNER JOIN crm_temp_product_info AS prod_temp ON corr_md_1109.issue_code = prod_temp.CASE_ID 
+INNER JOIN crm_temp_product_info AS prod_temp ON (corr_md_1109.issue_code = prod_temp.CASE_ID AND issue_area_correspond_md_1109_ordering = (prod_temp.ARTICLE_NUMBER - 1) )
 SET 
 issue_area_correspond_md_1109_cf_1114_code = INDIVIDUAL_LOT_FC_CD,
 issue_area_correspond_md_1109_cf_1114_name = INDIVIDUAL_LOT_FACTORY,
@@ -210,7 +146,10 @@ issue_area_correspond_md_1109_cf_1120_multil_lv4_name = RESULT_NAME_3,
 issue_area_correspond_md_1109_cf_1120_multil_lv5_code = RESULT_4,
 issue_area_correspond_md_1109_cf_1120_multil_lv5_name = RESULT_NAME_4,
 issue_area_correspond_md_1109_cf_1120_multil_lv6_code = RESULT_5,
-issue_area_correspond_md_1109_cf_1120_multil_lv6_name = RESULT_NAME_5
+issue_area_correspond_md_1109_cf_1120_multil_lv6_name = RESULT_NAME_5,
+issue_area_correspond_md_1109_cf_1231 = INDIVIDUAL_LOT_DATE,
+issue_area_correspond_md_1109_cf_1232 = INDIVIDUAL_LOT_DATE_TIME,
+issue_area_correspond_md_1109_ordering = prod_temp.ARTICLE_NUMBER - 1
 WHERE
 	corr_md_1109.issue_code IS NOT NULL;
 	
@@ -245,7 +184,10 @@ issue_area_correspond_md_1109_cf_1120_multil_lv4_name,
 issue_area_correspond_md_1109_cf_1120_multil_lv5_code,
 issue_area_correspond_md_1109_cf_1120_multil_lv5_name,
 issue_area_correspond_md_1109_cf_1120_multil_lv6_code,
-issue_area_correspond_md_1109_cf_1120_multil_lv6_name
+issue_area_correspond_md_1109_cf_1120_multil_lv6_name,
+issue_area_correspond_md_1109_cf_1231,
+issue_area_correspond_md_1109_cf_1232,
+issue_area_correspond_md_1109_ordering
 ) SELECT
 prod_temp.CASE_ID,
 INDIVIDUAL_LOT_FC_CD,
@@ -275,12 +217,13 @@ RESULT_NAME_3,
 RESULT_4,
 RESULT_NAME_4,
 RESULT_5,
-RESULT_NAME_5
+RESULT_NAME_5,
+INDIVIDUAL_LOT_DATE,
+INDIVIDUAL_LOT_DATE_TIME,
+prod_temp.ARTICLE_NUMBER - 1
 FROM
 	crm_temp_product_info AS prod_temp
-	LEFT JOIN crm_issue_area_correspond_md_1109 AS corr_md_1109 ON prod_temp.CASE_ID = corr_md_1109.issue_code 
+	LEFT JOIN crm_issue_area_correspond_md_1109 AS corr_md_1109 ON (prod_temp.CASE_ID = corr_md_1109.issue_code AND issue_area_correspond_md_1109_ordering = (prod_temp.ARTICLE_NUMBER - 1) )
 WHERE
 	corr_md_1109.issue_code IS NULL 
 	OR corr_md_1109.issue_code = '';
-
-
