@@ -4,8 +4,6 @@ UPDATE `crm_temp_voice_card_info`
 SET FILE_NAME = '$file_path'
 WHERE FILE_NAME IS NULL;
 
-ALTER TABLE `crm_temp_voice_card_info` 
-ADD INDEX `idx_CASE_ID`(`CASE_ID`) USING BTREE;
 
 DELETE t1.* 
 FROM

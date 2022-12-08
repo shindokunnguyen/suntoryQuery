@@ -1,9 +1,5 @@
 SET sql_mode='';
 
-UPDATE `crm_temp_product_info`
-SET FILE_NAME = '$file_path'
-WHERE FILE_NAME IS NULL;
-
 UPDATE crm_temp_product_info AS temp_prod
 INNER JOIN crm_temp_code_mapping AS code_mapping ON ( temp_prod.PRESERV_PLACE_CHANNEL = code_mapping.SOURCE_CLASS_VALUE AND code_mapping.SOURCE_CLASS = 'PRESERV_PLACE_CHANNEL' ) 
 SET PRESERV_PLACE_CHANNEL = code_mapping.TARGET_ITEM_CODE;
